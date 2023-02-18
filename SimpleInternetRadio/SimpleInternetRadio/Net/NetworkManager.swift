@@ -11,7 +11,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = "http://nl1.api.radio-browser.info/json/"
     
-    typealias Completion = (Result<Data?, NetworkError>) -> Void
+    typealias Completion = (Result<Data, NetworkError>) -> Void
     
     private init() {
     }
@@ -33,9 +33,7 @@ class NetworkManager {
                 completion(.failure(.invalidData))
                 return
             }
-            DispatchQueue.main.async {
-              completion( .success( data ))
-            }
+            completion(.success(data))
         }
         task.resume()
     }
@@ -86,37 +84,42 @@ class NetworkManager {
         loadDataFromURL(api: api, completion: completion, param: param);
     }
     
-    func getStationListByuuid(uuid: String, completion: @escaping Completion, param:String? = nil) {
-        let filter = "/byuuid/\(uuid)"
+    func getStationListByUUID(uuid: String, completion: @escaping Completion, param:String? = nil) {
+        let filter = "byuuid/\(uuid)"
         getStationList(completion: completion, filter: filter, param: param)
     }
     
-    func getStationListByname(name: String, completion: @escaping Completion, param:String? = nil) {
-        let filter = "/byname/\(name)"
+    func getStationListByName(name: String, completion: @escaping Completion, param:String? = nil) {
+        let filter = "byname/\(name)"
         getStationList(completion: completion, filter: filter, param: param)
     }
     
-    func getStationListBycountry(country: String, completion: @escaping Completion, param:String? = nil) {
-        let filter = "/bycountry/\(country)"
+    func getStationListByCountryCodeExact(countryCode: String, completion: @escaping Completion, param:String? = nil) {
+        let filter = "bycountrycodeexact/\(countryCode)"
         getStationList(completion: completion, filter: filter, param: param)
     }
     
-    func getStationListBystate(state: String, completion: @escaping Completion, param:String? = nil) {
-        let filter = "/bystate/\(state)"
+    func getStationListByCountry(country: String, completion: @escaping Completion, param:String? = nil) {
+        let filter = "bycountry/\(country)"
         getStationList(completion: completion, filter: filter, param: param)
     }
     
-    func getStationListBylanguage(language: String, completion: @escaping Completion, param:String? = nil) {
-        let filter = "/bylanguage/\(language)"
+    func getStationListByState(state: String, completion: @escaping Completion, param:String? = nil) {
+        let filter = "bystate/\(state)"
         getStationList(completion: completion, filter: filter, param: param)
     }
     
-    func getStationListByltag(tag: String, completion: @escaping Completion, param:String? = nil) {
-        let filter = "/bytag/\(tag)"
+    func getStationListByLanguage(language: String, completion: @escaping Completion, param:String? = nil) {
+        let filter = "bylanguage/\(language)"
         getStationList(completion: completion, filter: filter, param: param)
     }
     
-    func getClickList(completion: @escaping Completion, stationuuid: String? = nil, param:String? = nil) {
+    func getStationListByTag(tag: String, completion: @escaping Completion, param:String? = nil) {
+        let filter = "bytag/\(tag)"
+        getStationList(completion: completion, filter: filter, param: param)
+    }
+    
+    func getClickList(completion: @escaping Completion, stationuuid: Int? = nil, param:String? = nil) {
         var api = "clicks"
         if (stationuuid != nil) {
             api += "/\(stationuuid!)"
@@ -130,12 +133,12 @@ class NetworkManager {
     }
     
     func stationsSearch(param:String, completion: @escaping Completion) {
-        let filter = "/search"
+        let filter = "search"
         getStationList(completion: completion, filter: filter, param: param)
     }
     
     func getStationsTopclick(completion: @escaping Completion, rowcount: Int?, param:String? = nil) {
-        var filter = "/topclick"
+        var filter = "topclick"
         if (rowcount != nil) {
             filter += "/\(rowcount!)"
         }
@@ -143,7 +146,7 @@ class NetworkManager {
     }
     
     func getStationsTopvote(completion: @escaping Completion, rowcount: Int?, param:String? = nil) {
-        var filter = "/topvote"
+        var filter = "topvote"
         if (rowcount != nil) {
             filter += "/\(rowcount!)"
         }
@@ -151,7 +154,7 @@ class NetworkManager {
     }
     
     func getStationsLastclick(completion: @escaping Completion, rowcount: Int?, param:String? = nil) {
-        var filter = "/lastclick"
+        var filter = "lastclick"
         if (rowcount != nil) {
             filter += "/\(rowcount!)"
         }

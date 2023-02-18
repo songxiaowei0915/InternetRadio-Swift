@@ -9,14 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
-        .onAppear {
+        GeometryReader { geometry in
+            TabView {
+                MainView()
+                    .frame(width: geometry.size.width)
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                    }
+                    .tag(1)
+            }
+            .frame(width: geometry.size.width)
         }
     }
 }

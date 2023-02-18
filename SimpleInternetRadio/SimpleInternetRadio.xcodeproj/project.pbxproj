@@ -7,15 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		436FB486299E36E7006E9382 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436FB485299E36E7006E9382 /* MainView.swift */; };
 		43704721299B8920008F931F /* SimpleInternetRadioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704720299B8920008F931F /* SimpleInternetRadioApp.swift */; };
 		43704723299B8920008F931F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704722299B8920008F931F /* ContentView.swift */; };
 		43704725299B8921008F931F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43704724299B8921008F931F /* Assets.xcassets */; };
 		43704728299B8921008F931F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43704727299B8921008F931F /* Preview Assets.xcassets */; };
 		43704730299B8A63008F931F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4370472F299B8A63008F931F /* NetworkManager.swift */; };
 		43704736299B9C42008F931F /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704735299B9C42008F931F /* NetworkError.swift */; };
+		43704738299DD281008F931F /* RadioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704737299DD281008F931F /* RadioPlayer.swift */; };
+		4370473A299DECD7008F931F /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704739299DECD7008F931F /* DataManager.swift */; };
+		4370473C299E00DC008F931F /* RadioStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4370473B299E00DC008F931F /* RadioStation.swift */; };
+		4370473E299E0E98008F931F /* CountryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4370473D299E0E98008F931F /* CountryData.swift */; };
+		43704740299E0FB0008F931F /* StateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4370473F299E0FB0008F931F /* StateData.swift */; };
+		43704742299E101C008F931F /* LanguageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704741299E101C008F931F /* LanguageData.swift */; };
+		43704748299E1137008F931F /* TagData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704747299E1137008F931F /* TagData.swift */; };
+		4370474A299E1267008F931F /* ClickRequestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704749299E1267008F931F /* ClickRequestData.swift */; };
+		4370474C299E12F5008F931F /* ClickResultData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4370474B299E12F5008F931F /* ClickResultData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		436FB485299E36E7006E9382 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4370471D299B8920008F931F /* SimpleInternetRadio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleInternetRadio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43704720299B8920008F931F /* SimpleInternetRadioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInternetRadioApp.swift; sourceTree = "<group>"; };
 		43704722299B8920008F931F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -24,6 +35,15 @@
 		4370472E299B8A2D008F931F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4370472F299B8A63008F931F /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		43704735299B9C42008F931F /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		43704737299DD281008F931F /* RadioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayer.swift; sourceTree = "<group>"; };
+		43704739299DECD7008F931F /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		4370473B299E00DC008F931F /* RadioStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStation.swift; sourceTree = "<group>"; };
+		4370473D299E0E98008F931F /* CountryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryData.swift; sourceTree = "<group>"; };
+		4370473F299E0FB0008F931F /* StateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateData.swift; sourceTree = "<group>"; };
+		43704741299E101C008F931F /* LanguageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageData.swift; sourceTree = "<group>"; };
+		43704747299E1137008F931F /* TagData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagData.swift; sourceTree = "<group>"; };
+		43704749299E1267008F931F /* ClickRequestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickRequestData.swift; sourceTree = "<group>"; };
+		4370474B299E12F5008F931F /* ClickResultData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickResultData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,12 +77,14 @@
 			isa = PBXGroup;
 			children = (
 				4370472E299B8A2D008F931F /* Info.plist */,
+				43704746299E110C008F931F /* Util */,
 				43704720299B8920008F931F /* SimpleInternetRadioApp.swift */,
+				43704744299E109F008F931F /* Net */,
+				43704743299E107B008F931F /* Data */,
 				43704722299B8920008F931F /* ContentView.swift */,
+				436FB485299E36E7006E9382 /* MainView.swift */,
 				43704724299B8921008F931F /* Assets.xcassets */,
 				43704726299B8921008F931F /* Preview Content */,
-				4370472F299B8A63008F931F /* NetworkManager.swift */,
-				43704735299B9C42008F931F /* NetworkError.swift */,
 			);
 			path = SimpleInternetRadio;
 			sourceTree = "<group>";
@@ -73,6 +95,38 @@
 				43704727299B8921008F931F /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		43704743299E107B008F931F /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				4370473F299E0FB0008F931F /* StateData.swift */,
+				4370474B299E12F5008F931F /* ClickResultData.swift */,
+				43704749299E1267008F931F /* ClickRequestData.swift */,
+				43704741299E101C008F931F /* LanguageData.swift */,
+				43704747299E1137008F931F /* TagData.swift */,
+				4370473D299E0E98008F931F /* CountryData.swift */,
+				43704739299DECD7008F931F /* DataManager.swift */,
+				4370473B299E00DC008F931F /* RadioStation.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		43704744299E109F008F931F /* Net */ = {
+			isa = PBXGroup;
+			children = (
+				4370472F299B8A63008F931F /* NetworkManager.swift */,
+				43704735299B9C42008F931F /* NetworkError.swift */,
+			);
+			path = Net;
+			sourceTree = "<group>";
+		};
+		43704746299E110C008F931F /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				43704737299DD281008F931F /* RadioPlayer.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,9 +200,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				43704730299B8A63008F931F /* NetworkManager.swift in Sources */,
+				436FB486299E36E7006E9382 /* MainView.swift in Sources */,
+				43704742299E101C008F931F /* LanguageData.swift in Sources */,
+				4370473C299E00DC008F931F /* RadioStation.swift in Sources */,
+				4370473A299DECD7008F931F /* DataManager.swift in Sources */,
 				43704736299B9C42008F931F /* NetworkError.swift in Sources */,
+				4370473E299E0E98008F931F /* CountryData.swift in Sources */,
+				43704748299E1137008F931F /* TagData.swift in Sources */,
+				43704740299E0FB0008F931F /* StateData.swift in Sources */,
+				4370474A299E1267008F931F /* ClickRequestData.swift in Sources */,
 				43704723299B8920008F931F /* ContentView.swift in Sources */,
 				43704721299B8920008F931F /* SimpleInternetRadioApp.swift in Sources */,
+				4370474C299E12F5008F931F /* ClickResultData.swift in Sources */,
+				43704738299DD281008F931F /* RadioPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
