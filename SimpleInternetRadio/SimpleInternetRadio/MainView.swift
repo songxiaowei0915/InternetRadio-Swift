@@ -9,15 +9,7 @@ import SwiftUI
 
 class RadioProgress: ObservableObject {
     @Published var radioStation: RadioStation?
-    @Published var isPlaying: Bool = false {
-        didSet {
-            if radioStation != nil && isPlaying {
-                RadioPlayer.shared.playRadio(streamUrl: radioStation!.urlResolved)
-            } else {
-                RadioPlayer.shared.stopRadio()
-            }
-        }
-    }
+    @Published var isPlaying: Bool = false
     
     func setValue(radioStation: RadioStation?, isPlaying: Bool) {
         self.radioStation = radioStation
@@ -34,63 +26,82 @@ struct RadioPlayView: View {
     }
 }
 
-class AnimationImage: ObservableObject {
-    private var images:[UIImage] = []
-    private var timer: Timer?
-    @Published private var index = 0
-    private var start = 0
-    private var end = 0
-    private var defaultIndex = 0
+
+
+struct VoiceWaveView: View {
+    @Binding var isPlay:Bool
+    var isReverseColor: Bool = false
+    var frameWidth: CGFloat = 30
+    var frameHeight: CGFloat = 30
     
-    public init(animName:String, start: Int, end: Int, defaultIndex: Int) {
-        self.start = start
-        self.end = end
-        self.defaultIndex = defaultIndex
-        images = (start...end).map { UIImage(named: "\(animName)\($0)")! }
-        index = defaultIndex
-    }
-    
-    public func currentUIImage() -> UIImage {
-        return images[index]
-    }
-    
-    func startAnim() {
-        stopAnim()
-        index = start
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-            self.index += 1
-            if self.index > self.end { self.index = 0 }
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 0.1)) { timeline in
+            subView(isPlaying:$isPlay, frameWidth: frameWidth, frameHeight: frameHeight, isReverseColor: isReverseColor, date: timeline.date)
         }
     }
     
-    func stopAnim() {
-        index = defaultIndex
-        timer?.invalidate()
+    struct subView: View {
+        @Environment(\.colorScheme) private var colorScheme
+        @Binding var isPlaying: Bool
+        @State private var images:[String] = (0...3).map { String( "NowPlayingBars-\($0)") }
+        @State private var index:Int = 2
+        var frameWidth: CGFloat
+        var frameHeight: CGFloat
+        var isReverseColor: Bool
+        
+        let date: Date
+        
+        var body: some View {
+            Image(images[index])
+                .resizable()
+                .frame(width: frameWidth, height: frameHeight)
+                .colorMultiply(getColor())
+                .onChange(of: date) { _ in
+                    if (isPlaying) {
+                        accumulate()
+                    } else {
+                        index = 2
+                    }
+                }
+                
+        }
+        
+        func accumulate() -> Void {
+            if index+1 > 3 {
+                index = 0
+            } else {
+                index += 1
+            }
+        }
+        
+        func getColor() -> Color {
+            if isReverseColor {
+                return colorScheme == .light ? .black : .white
+            }
+            
+            return colorScheme == .light ? .white : .black
+        }
     }
 }
 
 struct RadioPlayAnimView: View {
     @Environment(\.colorScheme) private var colorScheme
-    @State public var uuid: String?
+    public var uuid: String?
     @ObservedObject var radioProgress: RadioProgress
-    @StateObject var animImages = AnimationImage(animName: "NowPlayingBars-", start: 0, end: 3, defaultIndex: 2);
-    @State var isReverseColor: Bool = true
-    @State var frameWidth: CGFloat = 20
-    @State var frameHeight: CGFloat = 20
+    var isReverseColor: Bool = true
+    var frameWidth: CGFloat = 20
+    var frameHeight: CGFloat = 20
+    @State var isPlay:Bool = false
     
     var body: some View {
-        Image(uiImage: animImages.currentUIImage())
-            .resizable()
-            .frame(width: frameWidth, height: frameHeight)
+        VoiceWaveView(isPlay: $isPlay, isReverseColor: isReverseColor, frameWidth: frameWidth, frameHeight: frameHeight)
             .onChange(of: radioProgress.radioStation) { _ in
                 if (uuid != nil && radioProgress.radioStation?.stationuuid == uuid) || (uuid == nil && radioProgress.isPlaying) {
-                    animImages.startAnim()
+                    isPlay = true
                 } else {
-                    animImages.stopAnim()
+                    isPlay = false
                 }
             }
-            .colorMultiply(getColor())
-            .scaledToFill()
     }
     
     func getColor() -> Color {
@@ -105,14 +116,16 @@ struct RadioPlayAnimView: View {
 struct RadioItem: View {
     @State var radio: RadioStation
     @ObservedObject var radioProgress: RadioProgress
-    @State var uiImage: UIImage = UIImage()
     
     var body: some View {
         Button {
             if radioProgress.radioStation?.stationuuid != radio.stationuuid {
                 radioProgress.setValue(radioStation: radio, isPlaying: true)
+                RadioPlayer.shared.playRadio(name: radio.name, streamUrl: radio.urlResolved)
+                
             } else {
                 radioProgress.setValue(radioStation: nil, isPlaying: false)
+                RadioPlayer.shared.stopRadio()
             }
         } label: {
             HStack {
@@ -120,7 +133,7 @@ struct RadioItem: View {
                     image.resizable()
                 } placeholder: {
                     if radio.favicon.isEmpty {
-                        Image(systemName: "radio")
+                        Image(systemName: "dot.radiowaves.left.and.right")
                             .resizable()
                             .scaledToFill()
                     } else {
@@ -162,8 +175,8 @@ struct RadioPlyaItem: View {
                     .resizable()
                     .frame(width: 50, height: 50)
                     .colorMultiply(colorScheme == .light ? .white : .black)
-                
-                RadioPlayAnimView(uuid: nil, radioProgress: radioItemProgress, isReverseColor: false, frameWidth: 50, frameHeight: 50)
+                //VoiceWaveView()
+                RadioPlayAnimView(uuid: nil, radioProgress: radioItemProgress, isReverseColor: false, frameWidth: 30, frameHeight: 30)
                 
                 VStack(alignment: .leading) {
                     Text( radioItemProgress.radioStation?.name ?? "")
@@ -207,9 +220,6 @@ struct MainView: View {
                 initTopVotes()
             }
             .searchable(text: $searchText)
-            //            .onChange(of: searchText) { _ in
-            //                runSearch()
-            //            }
             .onSubmit(of:.search,runSearch)
             
             RadioPlyaItem(radioProgress:radioProgress)
