@@ -11,7 +11,13 @@ import SwiftUI
 struct SimpleInternetRadioApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().onAppear {
+                DataManager.shared.getStationList { stations in
+                    DispatchQueue.main.async {
+                        ModelManager.shared.radioStationsModel.stations = stations
+                    }
+                }
+            }
         }
     }
 }

@@ -10,16 +10,9 @@ import SwiftUI
 
 class DataManager {
     static let shared = DataManager()
-    var stations:[RadioStation] = []
-    var uiImages: [String:UIImage] = [:]
     
     private init() {
-        getStationList() {[weak self]  values in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.stations = values.filter{$0.sslError == 0}
-            }
-        }
+        
     }
     
     func getConuntryList(completion: @escaping ([CountryData]) -> Void) {
@@ -113,7 +106,7 @@ class DataManager {
     }
     
     func stationsSearch(name: String, completion: @escaping ([RadioStation]) -> Void) {
-        let param = "name=\(name)&nameExact=true"
+        let param = "name=\(name)&nameExact=false"
         NetworkManager.shared.stationsSearch(param: param, completion: { result in
             switch result {
             case .success(let data):
@@ -187,21 +180,17 @@ class DataManager {
     
     func fetchImage(url: String, completion: @escaping (UIImage?) -> Void)  {
         guard let url = URL(string: url) else {
-            completion(UIImage(systemName: "photo"))
+            completion(nil)
             return
         }
         
         let getDataTask = URLSession.shared.dataTask(with: url) { (data, _, error) in
             guard let data = data, error == nil else {
-                completion(UIImage(systemName: "photo"))
+                completion(nil)
                 return
             }
             completion(UIImage(data: data))
         }
         getDataTask.resume()
-    }
-    
-    func getStationListByCountry(country: String) {
-        
     }
 }
