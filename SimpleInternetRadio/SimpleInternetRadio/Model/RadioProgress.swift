@@ -15,5 +15,18 @@ class RadioProgress: ObservableObject {
             } 
         }
     }
-    @Published var isPlaying: Bool = false
+    @Published var isPlaying: Bool = false {
+        didSet {
+            if isPlaying {
+                isBuffering = false
+            }
+        }
+    }
+    @Published var isBuffering: Bool = false {
+        didSet {
+            if isBuffering {
+                isPlaying = false
+            }
+        }
+    }
 }

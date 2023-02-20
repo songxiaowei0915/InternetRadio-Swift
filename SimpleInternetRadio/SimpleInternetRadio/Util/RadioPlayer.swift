@@ -9,15 +9,19 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 
+enum PlayerState {
+    case initial, playing, pause, stop, buffering
+}
+
 class RadioPlayer : NSObject {
-    enum PlayerState {
-        case initial, playing, pause, stop
-    }
-    
     static let shared = RadioPlayer()
     
     var avPlayer: AVPlayer
-    var state:PlayerState
+    var state:PlayerState {
+        didSet {
+            postStateMessage()
+        }
+    }
     
     private var observer:Any?
     
@@ -60,7 +64,8 @@ class RadioPlayer : NSObject {
         }
         avPlayer.allowsExternalPlayback = false
         
-        play()
+        state = .buffering
+        avPlayer.play()
         addObserver()
 
         print("playing with url: \(streamUrl)")
@@ -92,15 +97,13 @@ class RadioPlayer : NSObject {
         }
     }
     
-    
     private func togglePlayPause() {
         switch state {
         case .playing:
             pause()
         case .pause:
             play()
-        default:
-            stop()
+        default: break
         }
     }
     
@@ -115,6 +118,7 @@ class RadioPlayer : NSObject {
             } else {
                 print("Buffering completed")
                 self.removeObserver()
+                self.state = .playing
             }
         }
     }
@@ -123,6 +127,25 @@ class RadioPlayer : NSObject {
         if let observer = self.observer {
             self.avPlayer.removeTimeObserver(observer)
             self.observer = nil
+        }
+    }
+    
+    private func postStateMessage() {
+        DispatchQueue.main.async { [self] in
+            var message: String = ""
+            switch state {
+            case .initial:
+                message = MessageDefine.RADIOPLAYER_INITIAL
+            case .playing:
+                message = MessageDefine.RADIOPLAYER_PLAYING
+            case .pause:
+                message = MessageDefine.RADIOPLAYER_PAUSE
+            case .stop:
+                message = MessageDefine.RADIOPLAYER_STOP
+            case .buffering:
+                message = MessageDefine.RADIOPLAYER_BUFFERING
+            }
+            NotificationCenter.default.post(name: Notification.Name(message), object: nil)
         }
     }
 }

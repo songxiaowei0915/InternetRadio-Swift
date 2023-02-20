@@ -12,12 +12,11 @@ class RadioStationsModel : ObservableObject {
     @Published var stations:[RadioStation] = [] {
         didSet {
             getMainStations()
-            //cacheImage()
         }
     }
-    //@Published var imageCaches:[String:UIImage] = [:]
     @Published var mainStations: [RadioStation] = []
     @Published var searchStations: [RadioStation] = []
+    @Published var currentStation: RadioStation? = nil
     
     func getMainStations() {
         let identifier = Locale.current.region!.identifier
@@ -28,30 +27,11 @@ class RadioStationsModel : ObservableObject {
         let searchText = searchText.trimmingCharacters(in: .whitespaces)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {return}
-            self.searchStations = self.stations.filter { $0.name.contains(searchText) || $0.country.contains(searchText) ||
+            self.searchStations = self.stations.filter({ $0.name.contains(searchText) || $0.country.contains(searchText) ||
                             $0.language.contains(searchText) ||
                             $0.tags.contains(searchText) ||
                             $0.state.contains(searchText)
-            }
+            }).sorted(by: { $0.votes > $1.votes })
         }
     }
-    
-//    private func cacheImage() {
-//        for statin in stations {
-//            imageCaches[statin.stationuuid] = UIImage(systemName: "dot.radiowaves.left.and.right")
-//        }
-//        Task{
-//            DispatchQueue.main.async { [self] in
-//                for statin in stations {
-//                    if !statin.favicon.isEmpty {
-//                        DataManager.shared.fetchImage(url: statin.favicon) { [self, statin] uiImage in
-//                            imageCaches[statin.stationuuid] = uiImage
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
-//    }
-    
 }

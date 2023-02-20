@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		4365789D29A1DC84000558D9 /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4365789C29A1DC84000558D9 /* ModelManager.swift */; };
-		4365789F29A1EA16000558D9 /* RadioPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4365789E29A1EA16000558D9 /* RadioPlayView.swift */; };
-		436578A129A1EA64000558D9 /* VoiceWaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A029A1EA64000558D9 /* VoiceWaveView.swift */; };
+		4365789F29A1EA16000558D9 /* RadioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4365789E29A1EA16000558D9 /* RadioPlayerView.swift */; };
+		436578A129A1EA64000558D9 /* AnimatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A029A1EA64000558D9 /* AnimatedView.swift */; };
 		436578A329A22097000558D9 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A229A22097000558D9 /* ImageCache.swift */; };
+		436578A529A241DC000558D9 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A429A241DC000558D9 /* MiniPlayerView.swift */; };
+		436578A729A37AB0000558D9 /* RadioPlayAnimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */; };
+		436578A929A38CCA000558D9 /* MessageDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A829A38CCA000558D9 /* MessageDefine.swift */; };
 		436FB486299E36E7006E9382 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436FB485299E36E7006E9382 /* MainView.swift */; };
 		43704721299B8920008F931F /* SimpleInternetRadioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704720299B8920008F931F /* SimpleInternetRadioApp.swift */; };
 		43704723299B8920008F931F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704722299B8920008F931F /* ContentView.swift */; };
@@ -33,9 +36,12 @@
 
 /* Begin PBXFileReference section */
 		4365789C29A1DC84000558D9 /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
-		4365789E29A1EA16000558D9 /* RadioPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayView.swift; sourceTree = "<group>"; };
-		436578A029A1EA64000558D9 /* VoiceWaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceWaveView.swift; sourceTree = "<group>"; };
+		4365789E29A1EA16000558D9 /* RadioPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerView.swift; sourceTree = "<group>"; };
+		436578A029A1EA64000558D9 /* AnimatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedView.swift; sourceTree = "<group>"; };
 		436578A229A22097000558D9 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		436578A429A241DC000558D9 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
+		436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayAnimView.swift; sourceTree = "<group>"; };
+		436578A829A38CCA000558D9 /* MessageDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDefine.swift; sourceTree = "<group>"; };
 		436FB485299E36E7006E9382 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4370471D299B8920008F931F /* SimpleInternetRadio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleInternetRadio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43704720299B8920008F931F /* SimpleInternetRadioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInternetRadioApp.swift; sourceTree = "<group>"; };
@@ -114,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				4370473F299E0FB0008F931F /* StateData.swift */,
+				436578A829A38CCA000558D9 /* MessageDefine.swift */,
 				436578A229A22097000558D9 /* ImageCache.swift */,
 				4370474B299E12F5008F931F /* ClickResultData.swift */,
 				43704749299E1267008F931F /* ClickRequestData.swift */,
@@ -147,8 +154,10 @@
 			isa = PBXGroup;
 			children = (
 				436FB485299E36E7006E9382 /* MainView.swift */,
-				436578A029A1EA64000558D9 /* VoiceWaveView.swift */,
-				4365789E29A1EA16000558D9 /* RadioPlayView.swift */,
+				436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */,
+				436578A429A241DC000558D9 /* MiniPlayerView.swift */,
+				436578A029A1EA64000558D9 /* AnimatedView.swift */,
+				4365789E29A1EA16000558D9 /* RadioPlayerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -244,10 +253,13 @@
 				4370473E299E0E98008F931F /* CountryData.swift in Sources */,
 				43704748299E1137008F931F /* TagData.swift in Sources */,
 				436578A329A22097000558D9 /* ImageCache.swift in Sources */,
-				436578A129A1EA64000558D9 /* VoiceWaveView.swift in Sources */,
+				436578A729A37AB0000558D9 /* RadioPlayAnimView.swift in Sources */,
+				436578A129A1EA64000558D9 /* AnimatedView.swift in Sources */,
+				436578A929A38CCA000558D9 /* MessageDefine.swift in Sources */,
 				43704740299E0FB0008F931F /* StateData.swift in Sources */,
+				436578A529A241DC000558D9 /* MiniPlayerView.swift in Sources */,
 				4370474A299E1267008F931F /* ClickRequestData.swift in Sources */,
-				4365789F29A1EA16000558D9 /* RadioPlayView.swift in Sources */,
+				4365789F29A1EA16000558D9 /* RadioPlayerView.swift in Sources */,
 				43704723299B8920008F931F /* ContentView.swift in Sources */,
 				4385950829A1CC82006348F2 /* RadioStationsModel.swift in Sources */,
 				43704721299B8920008F931F /* SimpleInternetRadioApp.swift in Sources */,

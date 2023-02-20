@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "NowPlayingBars-2.png",
+      "filename" : "Play.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "NowPlayingBars-2@2x.png",
+      "filename" : "Play@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "NowPlayingBars-2@3x.png",
+      "filename" : "Play@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

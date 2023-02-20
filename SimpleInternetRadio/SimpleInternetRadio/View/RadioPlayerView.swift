@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RadioPlayView: View {
+struct RadioPlayerView: View {
     var body: some View {
         VStack {
             

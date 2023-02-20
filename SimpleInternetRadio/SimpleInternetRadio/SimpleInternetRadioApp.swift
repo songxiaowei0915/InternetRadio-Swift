@@ -11,7 +11,7 @@ import SwiftUI
 struct SimpleInternetRadioApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView().onAppear {
+            ContentView().task {
                 DataManager.shared.getStationList { stations in
                     DispatchQueue.main.async {
                         ModelManager.shared.radioStationsModel.stations = stations

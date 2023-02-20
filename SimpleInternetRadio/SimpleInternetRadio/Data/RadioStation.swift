@@ -22,4 +22,5 @@ struct RadioStation: Codable,Hashable {
     let state: String
     let codec: String
     let sslError:Int
+    let homepage:String
 }
