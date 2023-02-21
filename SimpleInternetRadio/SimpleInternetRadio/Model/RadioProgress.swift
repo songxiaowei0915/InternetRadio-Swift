@@ -7,16 +7,13 @@
 
 import Foundation
 
+
 class RadioProgress: ObservableObject {
-    @Published var radioStation: RadioStation? {
-        didSet {
-            if radioStation == nil {
-                isPlaying = false
-            } 
-        }
-    }
+    @Published var radioStationModel:RadioStationModel?
+    
     @Published var isPlaying: Bool = false {
         didSet {
+            radioStationModel?.isPlaying = isPlaying
             if isPlaying {
                 isBuffering = false
             }

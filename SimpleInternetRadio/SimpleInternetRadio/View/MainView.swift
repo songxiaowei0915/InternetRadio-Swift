@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct RadioItem: View {
-    @State var radio: RadioStation
-    @ObservedObject var radioProgress: RadioProgress
+    @StateObject var radioStationModel: RadioStationModel
+    @ObservedObject var crrentRadioProgress: RadioProgress
     @State var radioImage:UIImage = UIImage(named: "radio-default")!
     @State var isCacheImage = false
     
@@ -38,11 +38,11 @@ struct RadioItem: View {
                 .cornerRadius(20)
                 
                 VStack(alignment: .leading) {
-                    Text(radio.name)
+                    Text(radioStationModel.radioStation?.name ?? "")
                         .font(.headline)
                     HStack(alignment: .center)  {
-                        RadioPlayAnimView(isPlaying: $isPlaying)
-                        Text("\(radio.tags)")
+                        RadioPlayAnimView(isPlaying: $radioStationModel.isPlaying)
+                        Text("\(radioStationModel.radioStation?.tags ?? "")")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .fixedSize(horizontal: false, vertical: true)
@@ -50,12 +50,6 @@ struct RadioItem: View {
                     }
                 }
                 .padding(10)
-                .onChange(of: radioProgress.isPlaying) { value in
-                    checkPlaying()
-                }
-                .onAppear{
-                    checkPlaying()
-                }
             }
         }
         .task {
@@ -66,9 +60,10 @@ struct RadioItem: View {
     }
     
     func itemClick() {
-        if radioProgress.radioStation?.stationuuid != radio.stationuuid {
-            radioProgress.radioStation = radio
-            RadioPlayer.shared.play(name: radio.name, streamUrl: radio.urlResolved, showImage: radioImage)
+        if crrentRadioProgress.radioStationModel != radioStationModel {
+            crrentRadioProgress.radioStationModel?.isPlaying = false
+            crrentRadioProgress.radioStationModel = radioStationModel
+            RadioPlayer.shared.play(name: radioStationModel.radioStation!.name, streamUrl: radioStationModel.radioStation!.urlResolved, showImage: radioImage)
         }
     }
     
@@ -76,8 +71,10 @@ struct RadioItem: View {
         if isCacheImage {
             return
         }
-        if !radio.favicon.isEmpty {
-            DataManager.shared.fetchImage(url: radio.favicon) { [self] image in
+        
+        let favicon = radioStationModel.radioStation?.favicon ?? ""
+        if favicon != "" {
+            DataManager.shared.fetchImage(url: favicon) { [self] image in
                 guard let image = image else { return }
                 DispatchQueue.main.async {
                     self.radioImage = image
@@ -86,14 +83,6 @@ struct RadioItem: View {
         }
         
         self.isCacheImage = true
-    }
-    
-    func checkPlaying() {
-        if radioProgress.isPlaying && radioProgress.radioStation?.stationuuid == radio.stationuuid {
-            isPlaying = true
-        } else {
-            isPlaying = false
-        }
     }
     
 }
@@ -111,8 +100,8 @@ struct MainView: View {
             ZStack {
                 NavigationStack {
                     List {
-                        ForEach(searchResults, id: \.self) { radio in
-                            RadioItem(radio: radio, radioProgress: crerentRadioProgress)
+                        ForEach(searchResults, id: \.self) { radioStation in
+                            RadioItem(radioStationModel: RadioStationModel(radioStation: radioStation), crrentRadioProgress: crerentRadioProgress)
                         }
                     }
                     .listStyle(.inset)
@@ -123,7 +112,7 @@ struct MainView: View {
                 ProgressView().isHidden(radioStationsModel.mainStations.count > 0)
             }.padding(0)
 
-            MiniPlayerView(radioProgress: crerentRadioProgress)
+            MiniPlayerView(crerentRadioProgress: crerentRadioProgress)
         }
     }
     

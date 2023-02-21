@@ -16,7 +16,6 @@ class RadioStationsModel : ObservableObject {
     }
     @Published var mainStations: [RadioStation] = []
     @Published var searchStations: [RadioStation] = []
-    @Published var currentStation: RadioStation? = nil
     
     func getMainStations() {
         let identifier = Locale.current.region!.identifier

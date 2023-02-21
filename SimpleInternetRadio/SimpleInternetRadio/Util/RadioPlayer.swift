@@ -68,7 +68,7 @@ class RadioPlayer : NSObject {
         avPlayer.play()
         addObserver()
 
-        print("playing with url: \(streamUrl)")
+        print("buffering with url: \(streamUrl)")
 
         setupNowPlaying(name: name, showImage: showImage)
     }

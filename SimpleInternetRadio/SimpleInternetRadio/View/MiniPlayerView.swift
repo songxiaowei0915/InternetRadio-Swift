@@ -27,11 +27,8 @@ struct BufferingView: View {
 
 struct MiniPlayerView: View {
     @Environment(\.colorScheme) private var colorScheme
-    @ObservedObject var radioProgress: RadioProgress
-    
-    @State var playName: String = "but-play"// "never-used-2"
-    @State var isPlaying:Bool = false
-    
+    @ObservedObject var crerentRadioProgress: RadioProgress
+        
     var body: some View {
         GeometryReader { geometry in
             HStack (alignment: .center,spacing: 30){
@@ -40,14 +37,14 @@ struct MiniPlayerView: View {
                     .frame(width: 50, height: 50)
                     .colorMultiply(colorScheme == .light ? .white : .black)
 
-                RadioPlayAnimView(isReverseColor: false, frameWidth: 30, frameHeight: 30, isPlaying: $radioProgress.isPlaying)
+                RadioPlayAnimView(isReverseColor: false, frameWidth: 30, frameHeight: 30, isPlaying: $crerentRadioProgress.isPlaying)
 
                 VStack(alignment: .leading) {
-                    Text( radioProgress.radioStation?.name ?? "Nothing to play")
+                    Text( crerentRadioProgress.radioStationModel?.radioStation?.name ?? "Nothing to play")
                         .font(.headline)
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(colorScheme == .light ? .white : .black)
-                    Text(radioProgress.radioStation?.tags ?? "Nothing" )
+                    Text(crerentRadioProgress.radioStationModel?.radioStation?.tags ?? "Nothing" )
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .fixedSize(horizontal: false, vertical: true)
@@ -63,18 +60,12 @@ struct MiniPlayerView: View {
                         .onTapGesture {
                             playClick()
                         }
-//                        .onChange(of: radioProgress.isPlaying) {_ in
-//                            changeContolName()
-//                        }
                     
-                    BufferingView().isHidden(!radioProgress.isBuffering)
+                    BufferingView().isHidden(!crerentRadioProgress.isBuffering)
                 }
                 
             }
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .leading)
-            .task {
-                
-            }
         }
         .frame(height: 80)
         .background(colorScheme == .light ? .black : .white)
@@ -83,28 +74,26 @@ struct MiniPlayerView: View {
     func playClick() {
         if RadioPlayer.shared.state == .playing {
             RadioPlayer.shared.pause()
-            radioProgress.isPlaying = false
         } else if RadioPlayer.shared.state == .pause {
             RadioPlayer.shared.play()
-            radioProgress.isPlaying = true
         }
     }
     
     var buttonName:String {
-        if radioProgress.radioStation == nil || radioProgress.isBuffering {
+        if (!crerentRadioProgress.isBuffering && !crerentRadioProgress.isPlaying) || crerentRadioProgress.isBuffering {
             return "but-play"
         } else {
-            return radioProgress.isPlaying ? "never-used" : "never-used-2"
+            return crerentRadioProgress.isPlaying ? "never-used" : "never-used-2"
         }
     }
     
     var buttonFrame: CGFloat {
-        radioProgress.radioStation == nil || radioProgress.isBuffering ? 30 : 50
+        return crerentRadioProgress.radioStationModel == nil || crerentRadioProgress.isBuffering ? 30 : 50
     }
 }
 
 struct MiniPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        MiniPlayerView(radioProgress: RadioProgress())
+        MiniPlayerView(crerentRadioProgress: RadioProgress())
     }
 }

@@ -14,6 +14,7 @@
 		436578A529A241DC000558D9 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A429A241DC000558D9 /* MiniPlayerView.swift */; };
 		436578A729A37AB0000558D9 /* RadioPlayAnimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */; };
 		436578A929A38CCA000558D9 /* MessageDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A829A38CCA000558D9 /* MessageDefine.swift */; };
+		436578AB29A46B3D000558D9 /* RadioStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578AA29A46B3D000558D9 /* RadioStationModel.swift */; };
 		436FB486299E36E7006E9382 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436FB485299E36E7006E9382 /* MainView.swift */; };
 		43704721299B8920008F931F /* SimpleInternetRadioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704720299B8920008F931F /* SimpleInternetRadioApp.swift */; };
 		43704723299B8920008F931F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704722299B8920008F931F /* ContentView.swift */; };
@@ -42,6 +43,7 @@
 		436578A429A241DC000558D9 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayAnimView.swift; sourceTree = "<group>"; };
 		436578A829A38CCA000558D9 /* MessageDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDefine.swift; sourceTree = "<group>"; };
+		436578AA29A46B3D000558D9 /* RadioStationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStationModel.swift; sourceTree = "<group>"; };
 		436FB485299E36E7006E9382 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4370471D299B8920008F931F /* SimpleInternetRadio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleInternetRadio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43704720299B8920008F931F /* SimpleInternetRadioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInternetRadioApp.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				4385950729A1CC82006348F2 /* RadioStationsModel.swift */,
+				436578AA29A46B3D000558D9 /* RadioStationModel.swift */,
 				4385950A29A1CCD2006348F2 /* RadioProgress.swift */,
 				4365789C29A1DC84000558D9 /* ModelManager.swift */,
 			);
@@ -246,6 +249,7 @@
 				436FB486299E36E7006E9382 /* MainView.swift in Sources */,
 				4365789D29A1DC84000558D9 /* ModelManager.swift in Sources */,
 				4385950B29A1CCD2006348F2 /* RadioProgress.swift in Sources */,
+				436578AB29A46B3D000558D9 /* RadioStationModel.swift in Sources */,
 				43704742299E101C008F931F /* LanguageData.swift in Sources */,
 				4370473C299E00DC008F931F /* RadioStation.swift in Sources */,
 				4370473A299DECD7008F931F /* DataManager.swift in Sources */,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RadioStation: Codable,Hashable {
+struct RadioStation: Codable,Hashable, Equatable {
     let stationuuid:String
     let name: String
     let url: String
@@ -23,4 +23,14 @@ struct RadioStation: Codable,Hashable {
     let codec: String
     let sslError:Int
     let homepage:String
+}
+
+extension RadioStation {
+    static func == (lhs: RadioStation, rhs: RadioStation) -> Bool {
+        return lhs.stationuuid == rhs.stationuuid
+    }
+    
+    static func != (lhs: RadioStation, rhs: RadioStation) -> Bool {
+        return lhs.stationuuid != rhs.stationuuid
+    }
 }
