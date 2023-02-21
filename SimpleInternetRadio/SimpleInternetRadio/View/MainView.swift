@@ -95,23 +95,21 @@ struct MainView: View {
     @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     
     var body: some View {
-        VStack(alignment:.center) {
-            
-            ZStack {
-                NavigationStack {
-                    List {
-                        ForEach(searchResults, id: \.self) { radioStation in
-                            RadioItem(radioStationModel: RadioStationModel(radioStation: radioStation), crrentRadioProgress: crerentRadioProgress)
-                        }
+        VStack {
+            NavigationStack {
+                List {
+                    ForEach(searchResults, id: \.self) { radioStation in
+                        RadioItem(radioStationModel: RadioStationModel(radioStation: radioStation), crrentRadioProgress: crerentRadioProgress)
                     }
-                    .listStyle(.inset)
                 }
-                .searchable(text: $searchText)
-                .onSubmit(of:.search,runSearch) 
-                
+                .listStyle(.inset)
+            }
+            .overlay {
                 ProgressView().isHidden(radioStationsModel.mainStations.count > 0)
-            }.padding(0)
-
+            }
+            .searchable(text: $searchText)
+            .onSubmit(of:.search,runSearch)
+            
             MiniPlayerView(crerentRadioProgress: crerentRadioProgress)
         }
     }

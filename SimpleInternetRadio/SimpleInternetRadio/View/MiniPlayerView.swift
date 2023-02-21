@@ -28,10 +28,12 @@ struct BufferingView: View {
 struct MiniPlayerView: View {
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var crerentRadioProgress: RadioProgress
+    @State var viewHieght:CGFloat = 80
         
     var body: some View {
         GeometryReader { geometry in
-            HStack (alignment: .center,spacing: 30){
+            HStack (alignment: .center,spacing: 20){
+                Spacer()
                 Image("btn-favorite")
                     .resizable()
                     .frame(width: 50, height: 50)
@@ -50,24 +52,29 @@ struct MiniPlayerView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .lineLimit(1)
 
+                }.readSize { size in
+                    if size.height > 80 {
+                        viewHieght = size.height+20
+                    } else {
+                        viewHieght = 80
+                    }
                 }
                 
-                ZStack {
-                    Image(buttonName)
-                        .resizable()
-                        .frame(width:buttonFrame, height: buttonFrame)
-                        .colorMultiply(colorScheme == .light ? .white : .black)
-                        .onTapGesture {
-                            playClick()
-                        }
-                    
-                    BufferingView().isHidden(!crerentRadioProgress.isBuffering)
-                }
+                Image(buttonName)
+                    .resizable()
+                    .frame(width:buttonFrame, height: buttonFrame)
+                    .colorMultiply(colorScheme == .light ? .white : .black)
+                    .onTapGesture {
+                        playClick()
+                    }.overlay {
+                        BufferingView().isHidden(!crerentRadioProgress.isBuffering).position(x:buttonFrame/2,y: buttonFrame/2)
+                    }
                 
+                Spacer()
             }
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .leading)
         }
-        .frame(height: 80)
+        .frame(height: viewHieght)
         .background(colorScheme == .light ? .black : .white)
     }
     
