@@ -14,7 +14,11 @@ struct SimpleInternetRadioApp: App {
             ContentView().task {
                 DataManager.shared.getStationList { stations in
                     DispatchQueue.main.async {
-                        ModelManager.shared.radioStationsModel.stations = stations
+                        var stationModels:[RadioStationModel] = []
+                        for station in stations {
+                            stationModels.append(RadioStationModel(radioStation: station))
+                        }
+                        ModelManager.shared.radioStationsModel.stations = stationModels
                     }
                 }
             }

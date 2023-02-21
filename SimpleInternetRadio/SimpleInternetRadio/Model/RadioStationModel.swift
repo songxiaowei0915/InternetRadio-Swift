@@ -6,18 +6,25 @@
 //
 
 import Foundation
+import UIKit
 
-class RadioStationModel: ObservableObject, Equatable {
-    @Published var radioStation: RadioStation? {
+class RadioStationModel: ObservableObject, Equatable, Hashable {
+    @Published var radioStation: RadioStation {
         didSet {
             isPlaying = false
         }
     }
     @Published var isPlaying: Bool = false
     
-    init(radioStation: RadioStation? = nil, isPlaying: Bool = false) {
+    @Published var radioImage:UIImage = UIImage(named: "radio-default")!
+    
+    init(radioStation: RadioStation, isPlaying: Bool = false) {
         self.radioStation = radioStation
         self.isPlaying = isPlaying
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        
     }
 }
 

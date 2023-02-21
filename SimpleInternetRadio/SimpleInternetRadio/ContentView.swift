@@ -17,6 +17,13 @@ struct ContentView: View {
                         Label("Home", systemImage: "house")
                     }
                     .tag(1)
+                
+                FavoriteView()
+                    .frame(width: geometry.size.width)
+                    .tabItem {
+                        Label("Favorite", systemImage: "star")
+                    }
+                    .tag(2)
             }
             .frame(width: geometry.size.width)
         }

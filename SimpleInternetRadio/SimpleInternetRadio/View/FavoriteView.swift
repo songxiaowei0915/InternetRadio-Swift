@@ -1,13 +1,13 @@
 //
-//  MainView.swift
+//  Favorite.swift
 //  SimpleInternetRadio
 //
-//  Created by 宋小伟 on 2023/2/16.
+//  Created by 宋小伟 on 2023/2/21.
 //
 
 import SwiftUI
 
-struct MainView: View {
+struct FavoriteView: View {
     @State private var searchText = ""
     @State var topVotes: [RadioStation] = []
     @State var searchRadios: [RadioStation] = []
@@ -19,12 +19,12 @@ struct MainView: View {
             NavigationStack {
                 List {
                     ForEach(searchResults, id: \.self) { radioStation in
-                        RadioItemView(radioStationModel: radioStation, crrentRadioProgress: crrentRadioProgress)
-                    }
+                        RadioItemView(radioStationModel:radioStation, crrentRadioProgress: crrentRadioProgress)
+                    }.onDelete(perform: delete)
                 }
-                .listStyle(.inset)
                 .padding(10)
             }
+            .listStyle(.inset)
             .overlay {
                 ProgressView().isHidden(radioStationsModel.mainStations.count > 0)
             }
@@ -37,10 +37,9 @@ struct MainView: View {
     
     var searchResults: [RadioStationModel] {
         if searchText.isEmpty  {
-            return radioStationsModel.mainStations
+            return radioStationsModel.favoriteStations
         } else {
-           
-            return radioStationsModel.searchStations
+            return radioStationsModel.searchFavoriteStations
         }
     }
     
@@ -48,12 +47,19 @@ struct MainView: View {
         if searchText.isEmpty {
            return
         }
-        radioStationsModel.getSearchStations(searchText: searchText)
+        
+        radioStationsModel.getSearchFavoriteStations(searchText: searchText)
+    }
+    
+    func delete(at offsets: IndexSet) {
+        for index in offsets{
+            radioStationsModel.removeFavoriteStation(index: index)
+        }
     }
 }
 
-struct MainView_Previews: PreviewProvider {
+struct FavoriteView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        FavoriteView()
     }
 }

@@ -15,6 +15,9 @@
 		436578A729A37AB0000558D9 /* RadioPlayAnimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */; };
 		436578A929A38CCA000558D9 /* MessageDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A829A38CCA000558D9 /* MessageDefine.swift */; };
 		436578AB29A46B3D000558D9 /* RadioStationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578AA29A46B3D000558D9 /* RadioStationModel.swift */; };
+		436578AD29A49FD2000558D9 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578AC29A49FD2000558D9 /* FavoriteView.swift */; };
+		436578AF29A4A2C1000558D9 /* RadioItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578AE29A4A2C1000558D9 /* RadioItemView.swift */; };
+		436578B329A4AE2E000558D9 /* FavoriteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578B229A4AE2E000558D9 /* FavoriteManager.swift */; };
 		436FB486299E36E7006E9382 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436FB485299E36E7006E9382 /* MainView.swift */; };
 		43704721299B8920008F931F /* SimpleInternetRadioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704720299B8920008F931F /* SimpleInternetRadioApp.swift */; };
 		43704723299B8920008F931F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43704722299B8920008F931F /* ContentView.swift */; };
@@ -44,6 +47,9 @@
 		436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayAnimView.swift; sourceTree = "<group>"; };
 		436578A829A38CCA000558D9 /* MessageDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDefine.swift; sourceTree = "<group>"; };
 		436578AA29A46B3D000558D9 /* RadioStationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStationModel.swift; sourceTree = "<group>"; };
+		436578AC29A49FD2000558D9 /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
+		436578AE29A4A2C1000558D9 /* RadioItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioItemView.swift; sourceTree = "<group>"; };
+		436578B229A4AE2E000558D9 /* FavoriteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteManager.swift; sourceTree = "<group>"; };
 		436FB485299E36E7006E9382 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4370471D299B8920008F931F /* SimpleInternetRadio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleInternetRadio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43704720299B8920008F931F /* SimpleInternetRadioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleInternetRadioApp.swift; sourceTree = "<group>"; };
@@ -126,6 +132,7 @@
 				436578A229A22097000558D9 /* ImageCache.swift */,
 				4370474B299E12F5008F931F /* ClickResultData.swift */,
 				43704749299E1267008F931F /* ClickRequestData.swift */,
+				436578B229A4AE2E000558D9 /* FavoriteManager.swift */,
 				43704741299E101C008F931F /* LanguageData.swift */,
 				43704747299E1137008F931F /* TagData.swift */,
 				4370473D299E0E98008F931F /* CountryData.swift */,
@@ -156,6 +163,8 @@
 			isa = PBXGroup;
 			children = (
 				436FB485299E36E7006E9382 /* MainView.swift */,
+				436578AE29A4A2C1000558D9 /* RadioItemView.swift */,
+				436578AC29A49FD2000558D9 /* FavoriteView.swift */,
 				436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */,
 				436578A429A241DC000558D9 /* MiniPlayerView.swift */,
 				436578A029A1EA64000558D9 /* AnimatedView.swift */,
@@ -246,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				43704730299B8A63008F931F /* NetworkManager.swift in Sources */,
+				436578AF29A4A2C1000558D9 /* RadioItemView.swift in Sources */,
 				436FB486299E36E7006E9382 /* MainView.swift in Sources */,
 				4365789D29A1DC84000558D9 /* ModelManager.swift in Sources */,
 				4385950B29A1CCD2006348F2 /* RadioProgress.swift in Sources */,
@@ -265,6 +275,8 @@
 				4370474A299E1267008F931F /* ClickRequestData.swift in Sources */,
 				4365789F29A1EA16000558D9 /* RadioPlayerView.swift in Sources */,
 				43704723299B8920008F931F /* ContentView.swift in Sources */,
+				436578AD29A49FD2000558D9 /* FavoriteView.swift in Sources */,
+				436578B329A4AE2E000558D9 /* FavoriteManager.swift in Sources */,
 				4385950829A1CC82006348F2 /* RadioStationsModel.swift in Sources */,
 				43704721299B8920008F931F /* SimpleInternetRadioApp.swift in Sources */,
 				4370474C299E12F5008F931F /* ClickResultData.swift in Sources */,
@@ -401,7 +413,6 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleInternetRadio/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -432,7 +443,6 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SimpleInternetRadio/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

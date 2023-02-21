@@ -10,9 +10,8 @@ import SwiftUI
 
 class DataManager {
     static let shared = DataManager()
-    
-    private init() {
         
+    private init() {
     }
     
     func getConuntryList(completion: @escaping ([CountryData]) -> Void) {
