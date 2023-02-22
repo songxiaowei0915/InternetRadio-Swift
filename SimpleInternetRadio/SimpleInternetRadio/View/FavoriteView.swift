@@ -18,7 +18,7 @@ struct FavoriteView: View {
         VStack {
             NavigationStack {
                 List {
-                    ForEach(searchResults, id: \.self) { radioStation in
+                    ForEach(searchResults) { radioStation in
                         RadioItemView(radioStationModel:radioStation, crrentRadioProgress: crrentRadioProgress)
                     }.onDelete(perform: delete)
                 }
@@ -31,7 +31,7 @@ struct FavoriteView: View {
             .searchable(text: $searchText)
             .onSubmit(of:.search,runSearch)
             
-            MiniPlayerView(crrentRadioProgress: crrentRadioProgress)
+            MiniPlayerView()
         }
     }
     

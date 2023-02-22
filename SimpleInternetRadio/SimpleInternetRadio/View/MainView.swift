@@ -18,12 +18,12 @@ struct MainView: View {
         VStack {
             NavigationStack {
                 List {
-                    ForEach(searchResults, id: \.self) { radioStation in
+                    ForEach(searchResults) { radioStation in
                         RadioItemView(radioStationModel: radioStation, crrentRadioProgress: crrentRadioProgress)
                     }
                 }
                 .listStyle(.inset)
-                .padding(10)
+                
             }
             .overlay {
                 ProgressView().isHidden(radioStationsModel.mainStations.count > 0)
@@ -31,7 +31,7 @@ struct MainView: View {
             .searchable(text: $searchText)
             .onSubmit(of:.search,runSearch)
             
-            MiniPlayerView(crrentRadioProgress: crrentRadioProgress)
+            MiniPlayerView()
         }
     }
     

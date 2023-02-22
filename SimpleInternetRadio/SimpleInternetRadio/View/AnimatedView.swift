@@ -9,18 +9,19 @@ import SwiftUI
 
 struct AnimatedView: View {
     @Environment(\.colorScheme) private var colorScheme
-    @State var imageNames:[String] = (0...3).map { String( "NowPlayingBars-\($0)") }
+    @State var images:[UIImage]
     @State var imageIndex: Int = 0
-    @State var image:Image?
+    @State var playImage:Image?
     @State var timer:Timer?
     @Binding var isPlaying:Bool
+    @State var defaultIndex:Int = 0
     var isReverseColor: Bool = false
     var frameWidth: CGFloat = 30
     var frameHeight: CGFloat = 30
 
     var body: some View {
         ZStack {
-            image?
+            playImage?
                 .resizable()
                 .frame(width: frameWidth, height: frameHeight)
                 .colorMultiply(getColor())
@@ -42,8 +43,8 @@ struct AnimatedView: View {
             return
         }
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-            if imageIndex < imageNames.count {
-                image = Image(imageNames[imageIndex])
+            if imageIndex < images.count {
+                playImage = Image(uiImage: images[imageIndex])
                 imageIndex += 1
             } else {
                 imageIndex = 0
@@ -58,8 +59,8 @@ struct AnimatedView: View {
             timer?.invalidate()
             timer = nil
             
-            imageIndex = 0
-            image = nil
+            imageIndex = defaultIndex
+            playImage = nil
         }
     }
     

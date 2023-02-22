@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-let STATION_COUNT_LIMIT = 200
+let STATION_COUNT_LIMIT = 10000
 
 class RadioStationsModel : ObservableObject {
     @Published var stations:[RadioStationModel] = [] {
@@ -41,11 +41,15 @@ class RadioStationsModel : ObservableObject {
     
     private func getLimitArray<T> (_ array: [T]) -> [T] {
         var count = array.count
+        if count == 0 {
+            return []
+        }
+        
         if count > STATION_COUNT_LIMIT {
             count = STATION_COUNT_LIMIT
         }
         
-        return Array(array[0...count])
+        return Array(array[0...count-1])
     }
     
     func getFavoriteStations() {

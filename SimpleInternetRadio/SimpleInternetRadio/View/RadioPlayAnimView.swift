@@ -14,6 +14,22 @@ struct RadioPlayAnimView: View {
     @Binding var isPlaying:Bool
     
     var body: some View {
-        AnimatedView(imageNames: (0...3).map{"NowPlayingBars-\($0)"}, isPlaying: $isPlaying, isReverseColor: isReverseColor, frameWidth: frameWidth, frameHeight: frameHeight)
+        AnimatedView(images: animFrames, isPlaying: $isPlaying, isReverseColor: isReverseColor, frameWidth: frameWidth, frameHeight: frameHeight)
+    }
+    
+    var animFrames: [UIImage] {
+        var animationFrames = [UIImage]()
+        for index in 0...3 {
+            if let image = UIImage(named: "NowPlayingBars-\(index)") {
+                animationFrames.append(image)
+            }
+        }
+      
+        for index in stride(from: 2, to: 0, by: -1) {
+            if let image = UIImage(named: "NowPlayingBars-\(index)") {
+                animationFrames.append(image)
+            }
+        }
+        return animationFrames
     }
 }

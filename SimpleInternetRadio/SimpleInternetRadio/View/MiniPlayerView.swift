@@ -7,111 +7,75 @@
 
 import SwiftUI
 
-struct BufferingView: View {
-    @Environment(\.colorScheme) private var colorScheme
-    @State var appear = false
-
-    var body: some View {
-        Circle()
-            .trim(from: 0.2, to: 1)
-            .stroke(lineWidth: 1)
-            .foregroundColor(colorScheme == .light ? .white : .black)
-            .frame(width: 50, height: 50)
-            .rotationEffect(Angle(degrees: appear ? 360 : 0))
-            .animation(Animation.linear(duration:1).repeatForever(autoreverses: false), value: appear)
-            .onAppear {
-                appear = true
-            }
-    }
-}
-
 struct MiniPlayerView: View {
     @Environment(\.colorScheme) private var colorScheme
-    @ObservedObject var crrentRadioProgress: RadioProgress
+    @ObservedObject var crrentRadioProgress: RadioProgress = ModelManager.shared.crrentRadioProgress
     @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     @State var viewHieght:CGFloat = 80
+    @State var showSheet:Bool = false
         
     var body: some View {
         GeometryReader { geometry in
-            HStack (alignment: .center,spacing: 20){
-                Spacer()
-                Image(favoriteName)
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .colorMultiply(colorScheme == .light ? .white : .black)
-                    .onTapGesture {
-                        favoriteClick()
-                    }
-
-                RadioPlayAnimView(isReverseColor: false, frameWidth: 30, frameHeight: 30, isPlaying: $crrentRadioProgress.isPlaying)
-
-                VStack(alignment: .leading) {
-                    Text( crrentRadioProgress.radioStationModel?.radioStation.name ?? "Nothing to play")
-                        .font(.headline)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(colorScheme == .light ? .white : .black)
-                    Text(crrentRadioProgress.radioStationModel?.radioStation.tags ?? "Nothing" )
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .lineLimit(1)
-
-                }.readSize { size in
-                    if size.height > 80 {
-                        viewHieght = size.height+20
-                    } else {
-                        viewHieght = 80
-                    }
+            ZStack {
+                HStack (alignment: .center,spacing: 20){
+                    Image(favoriteName)
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .colorMultiply(colorScheme == .light ? .white : .black)
+                        .onTapGesture {
+                            PlayerViewControl.favoriteClick()
+                        }.padding(10)
+                    Spacer()
+                    Image(buttonName)
+                        .resizable()
+                        .frame(width:buttonFrame, height: buttonFrame)
+                        .colorMultiply(colorScheme == .light ? .white : .black)
+                        .onTapGesture {
+                            PlayerViewControl.playClick()
+                        }.overlay {
+                            BufferingView(isReverseColor: false)
+                                .isHidden(!crrentRadioProgress.isBuffering)
+                                .disabled(!crrentRadioProgress.isBuffering)
+                            
+                        }.padding(10)
                 }
                 
-                Spacer()
-                Image(buttonName)
-                    .resizable()
-                    .frame(width:buttonFrame, height: buttonFrame)
-                    .colorMultiply(colorScheme == .light ? .white : .black)
-                    .onTapGesture {
-                        playClick()
-                    }.overlay {
-                        BufferingView()
-                            .isHidden(!crrentRadioProgress.isBuffering)
-                            .disabled(!crrentRadioProgress.isBuffering)
-                            
-                    }
                 
-                Spacer()
+                HStack {
+                    Spacer(minLength: 60)
+                    RadioPlayAnimView(isReverseColor: false, frameWidth: 30, frameHeight: 30, isPlaying: $crrentRadioProgress.isPlaying)
+                    
+                    VStack(alignment: .leading) {
+                        Text( crrentRadioProgress.radioStationModel?.radioStation.name ?? "Nothing to play")
+                            .font(.headline)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .foregroundColor(colorScheme == .light ? .white : .black)
+                            .lineLimit(2)
+                        Text(crrentRadioProgress.radioStationModel?.radioStation.tags ?? "Nothing" )
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineLimit(1)
+                        
+                    }.readSize { size in
+                        if size.height > 80 {
+                            viewHieght = size.height+20
+                        } else {
+                            viewHieght = 80
+                        }
+                    }
+                    Spacer(minLength: 60)
+                }
             }
             .frame(width: geometry.size.width, height: geometry.size.height, alignment: .leading)
+            .onTapGesture {
+                showSheet = true
+            }
         }
         .frame(height: viewHieght)
         .background(colorScheme == .light ? .black : .white)
-    }
-    
-    func playClick() {
-        if crrentRadioProgress.radioStationModel == nil {
-            return
-        }
-        if RadioPlayer.shared.state == .playing {
-            RadioPlayer.shared.pause()
-        } else if RadioPlayer.shared.state == .pause {
-            RadioPlayer.shared.play()
-        }
-    }
-    
-    func favoriteClick() {
-        if crrentRadioProgress.radioStationModel == nil {
-            return
-        }
-        
-        let stationuuid = crrentRadioProgress.radioStationModel?.radioStation.stationuuid;
-        
-        guard let uuid = stationuuid else {
-            return
-        }
-        
-        if radioStationsModel.isFavorite(uuid) {
-            radioStationsModel.removeFavoriteStation(uuid: uuid)
-        } else {
-            radioStationsModel.addFavoriteStation(uuid)
+        .sheet(isPresented: $showSheet) {
+            RadioPlayerView()
         }
     }
     
@@ -128,7 +92,7 @@ struct MiniPlayerView: View {
     }
     
     var favoriteName: String {
-        let stationuuid = crrentRadioProgress.radioStationModel?.radioStation.stationuuid;
+        let stationuuid = crrentRadioProgress.radioStationModel?.radioStation.stationuuid
         
         guard let uuid = stationuuid else {
             return "btn-favorite"
@@ -140,6 +104,6 @@ struct MiniPlayerView: View {
 
 struct MiniPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        MiniPlayerView(crrentRadioProgress: RadioProgress())
+        MiniPlayerView()
     }
 }

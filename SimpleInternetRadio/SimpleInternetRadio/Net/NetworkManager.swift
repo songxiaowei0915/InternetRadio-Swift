@@ -7,6 +7,12 @@
 
 import Foundation
 
+/*
+ de1.api.radio-browser.info
+ at1.api.radio-browser.info
+ nl1.api.radio-browser.info
+ */
+
 class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = "http://nl1.api.radio-browser.info/json/"

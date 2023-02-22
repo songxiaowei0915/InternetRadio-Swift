@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RadioStation: Codable,Hashable, Equatable {
+struct RadioStation: Codable, Equatable {
     let stationuuid:String
     let name: String
     let url: String

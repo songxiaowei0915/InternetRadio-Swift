@@ -23,6 +23,12 @@ class RadioPlayer : NSObject {
         }
     }
     
+    var volume : Float = 0.5 {
+        didSet {
+            avPlayer.volume = volume
+        }
+    }
+    
     private var observer:Any?
     
     private override init() {
