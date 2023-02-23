@@ -30,6 +30,11 @@ class RadioPlayer : NSObject {
     }
     
     private var observer:Any?
+    private var lastName:String = ""
+    private var lastShowImage:UIImage?
+    private var lastStreamUrl:String = ""
+    private var interrupt:Date?
+
     
     private override init() {
         let audioSession = AVAudioSession.sharedInstance()
@@ -38,11 +43,19 @@ class RadioPlayer : NSObject {
         try? audioSession.setActive(true)
         
         avPlayer = AVPlayer()
+        avPlayer.allowsExternalPlayback = false
+        avPlayer.automaticallyWaitsToMinimizeStalling = true
         state = .initial
         super.init()
         avPlayer.addObserver(self, forKeyPath: "timeControlStatus", options: .new, context: nil)
+        avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
+        avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
+
+            // Watch notifications
+        let center = NotificationCenter.default
+        center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: avPlayer.currentItem)
         
-        NotificationCenter.default.addObserver(
+        center.addObserver(
           forName: AVAudioSession.interruptionNotification,
           object: nil,
           queue: .main,
@@ -51,16 +64,33 @@ class RadioPlayer : NSObject {
         setupRemoteCommandCenter()
     }
     
+
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        let newStatus = avPlayer.currentItem?.status
+        
+        if newStatus == .failed {
+            NSLog("Error: \(String(describing: self.avPlayer.currentItem?.error?.localizedDescription)), error: \(String(describing: self.avPlayer.currentItem?.error))")
+        }
+    }
+
+    @objc func failedToPlayToEndTime(_ notification: Notification) {
+        let error = notification.userInfo!["AVPlayerItemFailedToPlayToEndTimeErrorKey"]
+        print("failedToPlayToEndTime Error: \(String(describing: error))")
+        interruptRecord()
+    }
+
+    
     func play(name:String, streamUrl: String, showImage: UIImage? = nil) {
         let url = URL(string: streamUrl)
-        if let currentItem = avPlayer.currentItem {
-            if let currentURL = (currentItem.asset as? AVURLAsset)?.url ,
-                currentURL == url {
-                return
-            }
-            
-            stop()
-        }
+//        if let currentItem = avPlayer.currentItem {
+//            if let currentURL = (currentItem.asset as? AVURLAsset)?.url ,
+//                currentURL == url {
+//                return
+//            }
+//
+//            stop()
+//        }
         
         let avPlayerItem = AVPlayerItem.init(url: url! as URL)
         if avPlayer.currentItem == nil {
@@ -68,11 +98,14 @@ class RadioPlayer : NSObject {
         } else {
             avPlayer.replaceCurrentItem(with: avPlayerItem)
         }
-        avPlayer.allowsExternalPlayback = false
         
         state = .buffering
         avPlayer.play()
-        addObserver()
+        addPeriodicTimeObserver()
+        
+        lastName = name
+        lastStreamUrl = streamUrl
+        lastShowImage = showImage
 
         print("buffering with url: \(streamUrl)")
 
@@ -83,7 +116,7 @@ class RadioPlayer : NSObject {
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
         avPlayer.rate = 0
-        removeObserver()
+        removePeriodicTimeObserver()
         state = .stop
         
         print("stopped radio")
@@ -103,6 +136,22 @@ class RadioPlayer : NSObject {
         }
     }
     
+    private func interruptRecord() {
+        if state == .playing {
+            interrupt = Date.now
+            avPlayer.pause()
+            state = .buffering
+        }
+    }
+    
+    public func resumeInterrupt() {
+        if avPlayer.currentItem != nil {
+            removePeriodicTimeObserver()
+            play(name: lastName, streamUrl: lastStreamUrl, showImage: lastShowImage)
+        }
+    }
+    
+    
     private func togglePlayPause() {
         switch state {
         case .playing:
@@ -113,23 +162,25 @@ class RadioPlayer : NSObject {
         }
     }
     
-    private func addObserver() {
-        let intervel : CMTime = CMTimeMake(value: 10, timescale: 10)
-        observer = avPlayer.addPeriodicTimeObserver(forInterval: intervel, queue: DispatchQueue.main) {[weak self] time in
+    private func addPeriodicTimeObserver() {
+        removePeriodicTimeObserver()
+        observer = avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 10, timescale: 10), queue: DispatchQueue.main) {[weak self] time in
             guard let self = self else { return }
             
             let playbackLikelyToKeepUp = self.avPlayer.currentItem?.isPlaybackLikelyToKeepUp
             if playbackLikelyToKeepUp == false{
-                print(self.avPlayer.rate)
+                print("Player.rate : \(self.avPlayer.rate)")
             } else {
+                
+                
                 print("Buffering completed")
-                self.removeObserver()
+                self.removePeriodicTimeObserver()
                 self.state = .playing
             }
         }
     }
     
-    private func removeObserver() {
+    private func removePeriodicTimeObserver() {
         if let observer = self.observer {
             self.avPlayer.removeTimeObserver(observer)
             self.observer = nil

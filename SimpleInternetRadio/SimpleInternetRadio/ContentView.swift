@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var presentAlert:Bool = false
+    
     var body: some View {
         GeometryReader { geometry in
             TabView {
@@ -26,6 +28,30 @@ struct ContentView: View {
                     .tag(2)
             }
             .frame(width: geometry.size.width)
+        }
+        .alert(isPresented: $presentAlert) {
+            Alert(
+                title: Text("The connection to the server was lost."),
+                dismissButton: .default(
+                    Text("Try Again")
+                ))
+        }
+        .onAppear {
+            checkNet()
+        }
+    }
+    
+    func checkNet() {
+        NetworkManager.shared.check { [self] status in
+            if status == .satisfied {
+                presentAlert = false
+                if !DataManager.shared.isAlready {
+                    DataManager.shared.loadAllStation()
+                }
+                RadioPlayer.shared.resumeInterrupt()
+            } else {
+                presentAlert = true
+            }
         }
     }
 }
@@ -56,6 +82,6 @@ extension View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+       ContentView()
     }
 }

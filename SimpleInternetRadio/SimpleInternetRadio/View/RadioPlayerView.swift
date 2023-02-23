@@ -77,7 +77,6 @@ struct RadioPlayerView: View {
                         
                 }.padding(10)
                 
-                
                 Slider(value: $speed,in: 0...1)
                     .onChange(of: speed ) {_ in
                         RadioPlayer.shared.volume = speed

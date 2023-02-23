@@ -24,10 +24,8 @@ class ModelManager {
     
     func addObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(radioStop), name:
-                                                Notification.Name(MessageDefine.RADIOPLAYER_INITIAL), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(radioStop), name:
                                                 Notification.Name(MessageDefine.RADIOPLAYER_STOP), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(radioStop), name:
+        NotificationCenter.default.addObserver(self, selector: #selector(radioPause), name:
                                                 Notification.Name(MessageDefine.RADIOPLAYER_PAUSE), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(radioPlaying), name:
                                                 Notification.Name(MessageDefine.RADIOPLAYER_PLAYING), object: nil)
@@ -39,9 +37,14 @@ class ModelManager {
         NotificationCenter.default.removeObserver(self)
     }
     
+    @objc private func radioPause() {
+        crrentRadioProgress.isPlaying = false
+    }
+    
     @objc private func radioStop() {
         crrentRadioProgress.isPlaying = false
         crrentRadioProgress.isBuffering = false
+        crrentRadioProgress.radioStationModel = nil
     }
     
     @objc private func radioPlaying() {

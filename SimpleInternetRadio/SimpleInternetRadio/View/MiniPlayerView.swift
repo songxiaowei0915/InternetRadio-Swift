@@ -80,7 +80,7 @@ struct MiniPlayerView: View {
     }
     
     var buttonName:String {
-        if (!crrentRadioProgress.isBuffering && !crrentRadioProgress.isPlaying) || crrentRadioProgress.isBuffering {
+        if (crrentRadioProgress.radioStationModel == nil && !crrentRadioProgress.isBuffering && !crrentRadioProgress.isPlaying) || crrentRadioProgress.isBuffering {
             return "but-play"
         } else {
             return crrentRadioProgress.isPlaying ? "never-used" : "never-used-2"

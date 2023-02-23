@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Network
+
 
 /*
  de1.api.radio-browser.info
@@ -14,12 +16,24 @@ import Foundation
  */
 
 class NetworkManager {
+    typealias Completion = (Result<Data, NetworkError>) -> Void
+    
     static let shared = NetworkManager()
     private let baseURL = "http://nl1.api.radio-browser.info/json/"
     
-    typealias Completion = (Result<Data, NetworkError>) -> Void
-    
     private init() {
+    }
+    
+    func check(completion: @escaping (NWPath.Status) -> Void ) -> Void {
+        let monitor = NWPathMonitor()
+        
+        monitor.pathUpdateHandler = { path in
+            completion(path.status)
+            print("Network isExpensive : \(path.isExpensive)")
+        }
+        
+        let queue = DispatchQueue(label: "Monitor")
+        monitor.start(queue: queue)
     }
     
     func loadDataFromURL(api: String, completion: @escaping Completion, param:String? = nil) {

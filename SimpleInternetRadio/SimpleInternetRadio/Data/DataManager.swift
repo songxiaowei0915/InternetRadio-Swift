@@ -10,8 +10,34 @@ import SwiftUI
 
 class DataManager {
     static let shared = DataManager()
-        
+    
+    private var stations:[RadioStation] = [] {
+        didSet {
+            var stationModels:[RadioStationModel] = []
+            for station in stations {
+                stationModels.append(RadioStationModel(radioStation: station))
+            }
+            
+            DispatchQueue.main.async {
+                ModelManager.shared.radioStationsModel.stations = stationModels
+            }
+        }
+    }
+    
+    var isAlready: Bool {
+        return stations.count > 0
+    }
+            
     private init() {
+    }
+    
+    func loadAllStation() {
+        if !stations.isEmpty {
+            return
+        }
+        getStationList { stations in
+            self.stations = stations
+        }
     }
     
     func getConuntryList(completion: @escaping ([CountryData]) -> Void) {

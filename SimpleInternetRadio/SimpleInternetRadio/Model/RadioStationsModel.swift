@@ -21,7 +21,7 @@ class RadioStationsModel : ObservableObject {
     @Published var searchStations: [RadioStationModel] = []
     @Published var favoriteStations: [RadioStationModel] = []
     @Published var searchFavoriteStations: [RadioStationModel] = []
-    
+        
     func getMainStations() {
         let identifier = Locale.current.region!.identifier
         let tempes = stations.filter({$0.radioStation.countrycode == identifier}).sorted(by: { $0.radioStation.votes > $1.radioStation.votes })
