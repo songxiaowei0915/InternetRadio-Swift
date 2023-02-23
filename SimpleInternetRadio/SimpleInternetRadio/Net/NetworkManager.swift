@@ -29,7 +29,7 @@ class NetworkManager {
         
         monitor.pathUpdateHandler = { path in
             completion(path.status)
-            print("Network isExpensive : \(path.isExpensive)")
+           // print("Network isExpensive : \(path.isExpensive)")
         }
         
         let queue = DispatchQueue(label: "Monitor")

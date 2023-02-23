@@ -48,9 +48,10 @@ struct ContentView: View {
                 if !DataManager.shared.isAlready {
                     DataManager.shared.loadAllStation()
                 }
-                RadioPlayer.shared.resumeInterrupt()
+                RadioPlayer.shared.resume()
             } else {
                 presentAlert = true
+                RadioPlayer.shared.interrupt()
             }
         }
     }

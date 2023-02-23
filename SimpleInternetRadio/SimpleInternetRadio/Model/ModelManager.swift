@@ -39,6 +39,7 @@ class ModelManager {
     
     @objc private func radioPause() {
         crrentRadioProgress.isPlaying = false
+        crrentRadioProgress.isBuffering = false
     }
     
     @objc private func radioStop() {

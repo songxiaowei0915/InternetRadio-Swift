@@ -33,8 +33,7 @@ class RadioPlayer : NSObject {
     private var lastName:String = ""
     private var lastShowImage:UIImage?
     private var lastStreamUrl:String = ""
-    private var interrupt:Date?
-
+    private var interruptStatus:PlayerState? = nil
     
     private override init() {
         let audioSession = AVAudioSession.sharedInstance()
@@ -64,25 +63,11 @@ class RadioPlayer : NSObject {
         setupRemoteCommandCenter()
     }
     
-
-    
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        let newStatus = avPlayer.currentItem?.status
-        
-        if newStatus == .failed {
-            NSLog("Error: \(String(describing: self.avPlayer.currentItem?.error?.localizedDescription)), error: \(String(describing: self.avPlayer.currentItem?.error))")
-        }
-    }
-
-    @objc func failedToPlayToEndTime(_ notification: Notification) {
-        let error = notification.userInfo!["AVPlayerItemFailedToPlayToEndTimeErrorKey"]
-        print("failedToPlayToEndTime Error: \(String(describing: error))")
-        interruptRecord()
-    }
-
-    
     func play(name:String, streamUrl: String, showImage: UIImage? = nil) {
-        let url = URL(string: streamUrl)
+        guard let url = URL(string: streamUrl) else {
+            return
+        }
+        
 //        if let currentItem = avPlayer.currentItem {
 //            if let currentURL = (currentItem.asset as? AVURLAsset)?.url ,
 //                currentURL == url {
@@ -92,7 +77,7 @@ class RadioPlayer : NSObject {
 //            stop()
 //        }
         
-        let avPlayerItem = AVPlayerItem.init(url: url! as URL)
+        let avPlayerItem = AVPlayerItem.init(url: url)
         if avPlayer.currentItem == nil {
             avPlayer = AVPlayer.init(playerItem: avPlayerItem)
         } else {
@@ -130,25 +115,27 @@ class RadioPlayer : NSObject {
     }
     
     func play() {
-        if avPlayer.currentItem != nil {
-            avPlayer.play()
-            state = .playing
-        }
+        play(name: lastName, streamUrl: lastStreamUrl, showImage: lastShowImage)
     }
     
-    private func interruptRecord() {
-        if state == .playing {
-            interrupt = Date.now
-            avPlayer.pause()
-            state = .buffering
-        }
+    func interrupt() {
+        interruptStatus = state
+        avPlayer.pause()
+        state = .buffering
     }
     
-    public func resumeInterrupt() {
-        if avPlayer.currentItem != nil {
-            removePeriodicTimeObserver()
-            play(name: lastName, streamUrl: lastStreamUrl, showImage: lastShowImage)
+    func resume() {
+        switch interruptStatus {
+        case .buffering, .playing:
+            play()
+            break
+        case .pause:
+            state = .pause
+            break
+        default:
+            break
         }
+        interruptStatus = nil
     }
     
     
@@ -204,6 +191,20 @@ class RadioPlayer : NSObject {
             }
             NotificationCenter.default.post(name: Notification.Name(message), object: nil)
         }
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        let newStatus = avPlayer.currentItem?.status
+        
+        if newStatus == .failed {
+            NSLog("Error: \(String(describing: self.avPlayer.currentItem?.error?.localizedDescription)), error: \(String(describing: self.avPlayer.currentItem?.error))")
+        }
+    }
+
+    @objc func failedToPlayToEndTime(_ notification: Notification) {
+        let error = notification.userInfo!["AVPlayerItemFailedToPlayToEndTimeErrorKey"]
+        print("failedToPlayToEndTime Error: \(String(describing: error))")
+        interrupt()
     }
 }
 
