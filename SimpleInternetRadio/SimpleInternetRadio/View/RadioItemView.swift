@@ -55,7 +55,8 @@ struct RadioItemView: View {
                     favoriteClick()
                 }
             
-        }.task {
+        }
+        .onAppear {
             if !isCacheImage {
                 cacheImage()
             }
@@ -66,6 +67,10 @@ struct RadioItemView: View {
         return radioStationModel.radioImage != nil ? radioStationModel.radioImage! : UIImage(named: "radio-default")!
     }
     
+    var imageURL: String  {
+        return radioStationModel.radioStation.favicon
+    }
+    
     var favoriteName: String {
         let uuid = radioStationModel.radioStation.stationuuid
         return radioStationsModel.isFavorite(uuid) ? "btn-favoriteFill" : "btn-favorite"
@@ -73,19 +78,11 @@ struct RadioItemView: View {
     
     func favoriteClick() {
         let uuid = radioStationModel.radioStation.stationuuid
-        if radioStationsModel.isFavorite(uuid) {
-            radioStationsModel.removeFavoriteStation(uuid: uuid)
-        } else {
-            radioStationsModel.addFavoriteStation(uuid)
-        }
+        NotificationCenter.default.post(name: Notification.Name(MessageDefine.STATION_FAVORITE), object: uuid)
     }
     
     func itemClick() {
-        if crrentRadioProgress.radioStationModel != radioStationModel {
-            crrentRadioProgress.radioStationModel?.isPlaying = false
-            crrentRadioProgress.radioStationModel = radioStationModel
-            RadioPlayer.shared.play(name: radioStationModel.radioStation.name, streamUrl: radioStationModel.radioStation.urlResolved, showImage: radioImage)
-        }
+        NotificationCenter.default.post(name: Notification.Name(MessageDefine.STATION_PLAY), object: radioStationModel)
     }
     
     func cacheImage() {
@@ -98,14 +95,12 @@ struct RadioItemView: View {
             return
         }
         
-        Task {
-            let favicon = radioStationModel.radioStation.favicon
-            if favicon != "" {
-                DataManager.shared.fetchImage(url: favicon) { [self] image in
-                    guard let image = image else { return }
-                    DispatchQueue.main.async {
-                        radioStationModel.radioImage = image
-                    }
+        let favicon = radioStationModel.radioStation.favicon
+        if favicon != "" {
+            DataManager.shared.fetchImage(url: favicon) { [self] image in
+                guard let image = image else { return }
+                DispatchQueue.main.async {
+                    radioStationModel.radioImage = image
                 }
             }
         }

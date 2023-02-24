@@ -8,32 +8,36 @@
 import Foundation
 
 class PlayerViewControl {
-    class func playClick() {
-        if ModelManager.shared.crrentRadioProgress.radioStationModel == nil {
-            return
-        }
-        if RadioPlayer.shared.state == .playing {
-            RadioPlayer.shared.pause()
-        } else if RadioPlayer.shared.state == .pause {
-            RadioPlayer.shared.play()
-        }
+    class func playOrPauseClick() {
+        NotificationCenter.default.post(name: Notification.Name(MessageDefine.STATION_PLAY_OR_PAUSE), object: nil)
     }
     
     class func favoriteClick() {
-        if ModelManager.shared.crrentRadioProgress.radioStationModel == nil {
-            return
-        }
-        
         let stationuuid = ModelManager.shared.crrentRadioProgress.radioStationModel?.radioStation.stationuuid;
-        
         guard let uuid = stationuuid else {
             return
         }
         
-        if ModelManager.shared.radioStationsModel.isFavorite(uuid) {
-            ModelManager.shared.radioStationsModel.removeFavoriteStation(uuid: uuid)
+        NotificationCenter.default.post(name: Notification.Name(MessageDefine.STATION_FAVORITE), object: uuid)
+    }
+    
+    class var favoriteName: String {
+        let stationuuid = ModelManager.shared.crrentRadioProgress.radioStationModel?.radioStation.stationuuid
+        
+        guard let uuid = stationuuid else {
+            return "btn-favorite"
+        }
+        
+        return ModelManager.shared.radioStationsModel.isFavorite(uuid) ? "btn-favoriteFill" : "btn-favorite"
+    }
+    
+    class var playName:String {
+        if ModelManager.shared.crrentRadioProgress.state == .playing {
+            return "never-used"
+        } else if ModelManager.shared.crrentRadioProgress.state == .pause {
+            return "never-used-2"
         } else {
-            ModelManager.shared.radioStationsModel.addFavoriteStation(uuid)
+            return "but-play"
         }
     }
 }

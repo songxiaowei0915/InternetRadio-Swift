@@ -26,12 +26,19 @@ struct ContentView: View {
                         Label("Favorite", systemImage: "star")
                     }
                     .tag(2)
+                
+                HistoryView()
+                    .frame(width: geometry.size.width)
+                    .tabItem {
+                        Label("History", systemImage: "book.fill")
+                    }
+                    .tag(3)
             }
             .frame(width: geometry.size.width)
         }
         .alert(isPresented: $presentAlert) {
             Alert(
-                title: Text("The connection to the server was lost."),
+                title: Text("The network connection was lost."),
                 dismissButton: .default(
                     Text("Try Again")
                 ))

@@ -28,7 +28,6 @@ struct RadioPlayerView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.openURL) var openURL
     @ObservedObject var crrentRadioProgress: RadioProgress = ModelManager.shared.crrentRadioProgress
-    @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     
     @State private var speed = RadioPlayer.shared.volume
     
@@ -39,7 +38,7 @@ struct RadioPlayerView: View {
             } label: {
                 Image("btn-close")
             }.padding(20)
-            
+                        
             Image(uiImage: radioImage)
                 .resizable()
                 .frame(width: 330, height: 330)
@@ -95,7 +94,7 @@ struct RadioPlayerView: View {
             
             ZStack {
                 HStack  {
-                    Image(favoriteName)
+                    Image(PlayerViewControl.favoriteName)
                         .resizable()
                         .frame(width: 30, height: 30)
                         .colorMultiply(colorScheme == .light ? .black : .white)
@@ -106,16 +105,15 @@ struct RadioPlayerView: View {
                     RadioPlayAnimView(frameWidth: 30, frameHeight: 30, isPlaying: $crrentRadioProgress.isPlaying).padding(10)
                 }
                 
-                Image(buttonName)
+                Image(PlayerViewControl.playName)
                     .resizable()
                     .frame(width:buttonFrame, height: buttonFrame)
                     .colorMultiply(colorScheme == .light ? .black : .white)
                     .onTapGesture {
-                        PlayerViewControl.playClick()
+                        PlayerViewControl.playOrPauseClick()
                     }.overlay {
                         BufferingView()
-                            .isHidden(!crrentRadioProgress.isBuffering)
-                            .disabled(!crrentRadioProgress.isBuffering)
+                            .isHidden(crrentRadioProgress.state != .buffering)
                             
                     }
             }
@@ -132,27 +130,9 @@ struct RadioPlayerView: View {
     }
     
     var buttonFrame: CGFloat {
-        return crrentRadioProgress.radioStationModel == nil || crrentRadioProgress.isBuffering ? 30 : 50
+        return crrentRadioProgress.state == .playing  || crrentRadioProgress.state == .pause ? 50 : 30
     }
-    
-    var buttonName:String {
-        if (!crrentRadioProgress.isBuffering && !crrentRadioProgress.isPlaying) || crrentRadioProgress.isBuffering {
-            return "but-play"
-        } else {
-            return crrentRadioProgress.isPlaying ? "never-used" : "never-used-2"
-        }
-    }
-    
-    var favoriteName: String {
-        let stationuuid = crrentRadioProgress.radioStationModel?.radioStation.stationuuid
         
-        guard let uuid = stationuuid else {
-            return "btn-favorite"
-        }
-        
-        return radioStationsModel.isFavorite(uuid) ? "btn-favoriteFill" : "btn-favorite"
-    }
-    
     func openHome() {
         guard let home = crrentRadioProgress.radioStationModel?.radioStation.homepage else {
             return

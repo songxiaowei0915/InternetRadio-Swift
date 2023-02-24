@@ -10,6 +10,11 @@ import SwiftUI
 
 class DataManager {
     static let shared = DataManager()
+    private let saveKey = "StationsCache.SavedData"
+    
+    private init() {
+
+    }
     
     private var stations:[RadioStation] = [] {
         didSet {
@@ -17,7 +22,6 @@ class DataManager {
             for station in stations {
                 stationModels.append(RadioStationModel(radioStation: station))
             }
-            
             DispatchQueue.main.async {
                 ModelManager.shared.radioStationsModel.stations = stationModels
             }
@@ -28,15 +32,23 @@ class DataManager {
         return stations.count > 0
     }
             
-    private init() {
-    }
-    
     func loadAllStation() {
         if !stations.isEmpty {
             return
         }
+        
+        if let data = UserDefaults.standard.data(forKey: saveKey) {
+            if let decoded = try? JSONDecoder().decode([RadioStation].self, from: data) {
+                stations = decoded
+                return
+            }
+        }
+        
         getStationList { stations in
             self.stations = stations
+            if let encoded = try? JSONEncoder().encode(self.stations) {
+                UserDefaults.standard.set(encoded, forKey: self.saveKey)
+            }
         }
     }
     

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4351395029A6183E002CC53E /* BufferingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351394F29A6183E002CC53E /* BufferingView.swift */; };
 		4351395229A6500C002CC53E /* PlayerViewControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351395129A6500C002CC53E /* PlayerViewControl.swift */; };
+		4351395429A7C397002CC53E /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351395329A7C397002CC53E /* HistoryView.swift */; };
 		4365789D29A1DC84000558D9 /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4365789C29A1DC84000558D9 /* ModelManager.swift */; };
 		4365789F29A1EA16000558D9 /* RadioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4365789E29A1EA16000558D9 /* RadioPlayerView.swift */; };
 		436578A129A1EA64000558D9 /* AnimatedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436578A029A1EA64000558D9 /* AnimatedView.swift */; };
@@ -38,11 +39,14 @@
 		4370474C299E12F5008F931F /* ClickResultData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4370474B299E12F5008F931F /* ClickResultData.swift */; };
 		4385950829A1CC82006348F2 /* RadioStationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4385950729A1CC82006348F2 /* RadioStationsModel.swift */; };
 		4385950B29A1CCD2006348F2 /* RadioProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4385950A29A1CCD2006348F2 /* RadioProgress.swift */; };
+		43CDFB1729A8D928002C3119 /* HistroyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CDFB1629A8D928002C3119 /* HistroyManager.swift */; };
+		43CDFB1929A8DBB4002C3119 /* DomainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CDFB1829A8DBB4002C3119 /* DomainManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4351394F29A6183E002CC53E /* BufferingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferingView.swift; sourceTree = "<group>"; };
 		4351395129A6500C002CC53E /* PlayerViewControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewControl.swift; sourceTree = "<group>"; };
+		4351395329A7C397002CC53E /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		4365789C29A1DC84000558D9 /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
 		4365789E29A1EA16000558D9 /* RadioPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerView.swift; sourceTree = "<group>"; };
 		436578A029A1EA64000558D9 /* AnimatedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedView.swift; sourceTree = "<group>"; };
@@ -74,6 +78,8 @@
 		4370474B299E12F5008F931F /* ClickResultData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickResultData.swift; sourceTree = "<group>"; };
 		4385950729A1CC82006348F2 /* RadioStationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStationsModel.swift; sourceTree = "<group>"; };
 		4385950A29A1CCD2006348F2 /* RadioProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioProgress.swift; sourceTree = "<group>"; };
+		43CDFB1629A8D928002C3119 /* HistroyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistroyManager.swift; sourceTree = "<group>"; };
+		43CDFB1829A8DBB4002C3119 /* DomainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +143,8 @@
 				4370474B299E12F5008F931F /* ClickResultData.swift */,
 				43704749299E1267008F931F /* ClickRequestData.swift */,
 				436578B229A4AE2E000558D9 /* FavoriteManager.swift */,
+				43CDFB1829A8DBB4002C3119 /* DomainManager.swift */,
+				43CDFB1629A8D928002C3119 /* HistroyManager.swift */,
 				43704741299E101C008F931F /* LanguageData.swift */,
 				43704747299E1137008F931F /* TagData.swift */,
 				4370473D299E0E98008F931F /* CountryData.swift */,
@@ -171,6 +179,7 @@
 				4351395129A6500C002CC53E /* PlayerViewControl.swift */,
 				436578AE29A4A2C1000558D9 /* RadioItemView.swift */,
 				436578AC29A49FD2000558D9 /* FavoriteView.swift */,
+				4351395329A7C397002CC53E /* HistoryView.swift */,
 				436578A629A37AB0000558D9 /* RadioPlayAnimView.swift */,
 				436578A429A241DC000558D9 /* MiniPlayerView.swift */,
 				436578A029A1EA64000558D9 /* AnimatedView.swift */,
@@ -260,6 +269,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43CDFB1729A8D928002C3119 /* HistroyManager.swift in Sources */,
+				43CDFB1929A8DBB4002C3119 /* DomainManager.swift in Sources */,
 				43704730299B8A63008F931F /* NetworkManager.swift in Sources */,
 				436578AF29A4A2C1000558D9 /* RadioItemView.swift in Sources */,
 				436FB486299E36E7006E9382 /* MainView.swift in Sources */,
@@ -267,6 +278,7 @@
 				4385950B29A1CCD2006348F2 /* RadioProgress.swift in Sources */,
 				4351395229A6500C002CC53E /* PlayerViewControl.swift in Sources */,
 				436578AB29A46B3D000558D9 /* RadioStationModel.swift in Sources */,
+				4351395429A7C397002CC53E /* HistoryView.swift in Sources */,
 				43704742299E101C008F931F /* LanguageData.swift in Sources */,
 				4370473C299E00DC008F931F /* RadioStation.swift in Sources */,
 				4370473A299DECD7008F931F /* DataManager.swift in Sources */,

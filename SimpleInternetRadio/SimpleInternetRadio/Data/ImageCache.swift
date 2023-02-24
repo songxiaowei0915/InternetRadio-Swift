@@ -8,6 +8,14 @@
 import Foundation
 import SwiftUI
 
-struct ImageCache {
-    var uiImages:[Int:UIImage] = [:]
+class ImageCache{
+    static private var cache: [String: Image] = [:]
+    static subscript(url: String) -> Image?{
+        get{
+            ImageCache.cache[url]
+        }
+        set{
+            ImageCache.cache[url] = newValue
+        }
+    }
 }

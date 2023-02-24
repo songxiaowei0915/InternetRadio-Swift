@@ -10,7 +10,7 @@ import AVFoundation
 import MediaPlayer
 
 enum PlayerState {
-    case initial, playing, pause, stop, buffering
+    case none, playing, pause, stop, buffering
 }
 
 class RadioPlayer : NSObject {
@@ -29,7 +29,9 @@ class RadioPlayer : NSObject {
         }
     }
     
-    private var observer:Any?
+    private var periodicTimeObserver:Any?
+    private var statusObserver:Any?
+    
     private var lastName:String = ""
     private var lastShowImage:UIImage?
     private var lastStreamUrl:String = ""
@@ -44,21 +46,23 @@ class RadioPlayer : NSObject {
         avPlayer = AVPlayer()
         avPlayer.allowsExternalPlayback = false
         avPlayer.automaticallyWaitsToMinimizeStalling = true
-        state = .initial
+        state = .none
         super.init()
-        avPlayer.addObserver(self, forKeyPath: "timeControlStatus", options: .new, context: nil)
-        avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
-        avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
 
-            // Watch notifications
         let center = NotificationCenter.default
         center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: avPlayer.currentItem)
-        
+        center.addObserver(self, selector:#selector(playbackStalled), name: .AVPlayerItemPlaybackStalled, object: avPlayer.currentItem)
+
         center.addObserver(
           forName: AVAudioSession.interruptionNotification,
           object: nil,
           queue: .main,
           using: handleAudioSessionInterruptionNotification)
+        
+        center.addObserver(self, selector: #selector(stationPlayOrPause), name:
+                            Notification.Name(MessageDefine.STATION_PLAY_OR_PAUSE), object: nil)
+        center.addObserver(self, selector: #selector(stationPlay), name:
+                                                Notification.Name(MessageDefine.STATION_PLAY), object: nil)
         
         setupRemoteCommandCenter()
     }
@@ -68,26 +72,17 @@ class RadioPlayer : NSObject {
             return
         }
         
-//        if let currentItem = avPlayer.currentItem {
-//            if let currentURL = (currentItem.asset as? AVURLAsset)?.url ,
-//                currentURL == url {
-//                return
-//            }
-//
-//            stop()
-//        }
-        
+        self.removeObserver()
         let avPlayerItem = AVPlayerItem.init(url: url)
         if avPlayer.currentItem == nil {
             avPlayer = AVPlayer.init(playerItem: avPlayerItem)
         } else {
             avPlayer.replaceCurrentItem(with: avPlayerItem)
         }
-        
+
         state = .buffering
         avPlayer.play()
-        addPeriodicTimeObserver()
-        
+        addObserver()
         lastName = name
         lastStreamUrl = streamUrl
         lastShowImage = showImage
@@ -101,7 +96,7 @@ class RadioPlayer : NSObject {
         avPlayer.pause()
         avPlayer.replaceCurrentItem(with: nil)
         avPlayer.rate = 0
-        removePeriodicTimeObserver()
+        removeObserver()
         state = .stop
         
         print("stopped radio")
@@ -149,62 +144,88 @@ class RadioPlayer : NSObject {
         }
     }
     
-    private func addPeriodicTimeObserver() {
-        removePeriodicTimeObserver()
-        observer = avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 10, timescale: 10), queue: DispatchQueue.main) {[weak self] time in
+    private func addObserver() {
+        //        avPlayer.addObserver(self, forKeyPath: "timeControlStatus", options: .new, context: nil)
+        //        avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
+        statusObserver = avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
+        
+        periodicTimeObserver = avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 10, timescale: 10), queue: DispatchQueue.main) {[weak self] time in
             guard let self = self else { return }
             
             let playbackLikelyToKeepUp = self.avPlayer.currentItem?.isPlaybackLikelyToKeepUp
             if playbackLikelyToKeepUp == false{
                 print("Player.rate : \(self.avPlayer.rate)")
             } else {
-                
-                
                 print("Buffering completed")
-                self.removePeriodicTimeObserver()
-                self.state = .playing
+                self.removeObserver()
             }
         }
     }
     
-    private func removePeriodicTimeObserver() {
-        if let observer = self.observer {
-            self.avPlayer.removeTimeObserver(observer)
-            self.observer = nil
+    private func removeObserver() {
+        if let periodicTimeObserverObserver = self.periodicTimeObserver {
+            self.avPlayer.removeTimeObserver(periodicTimeObserverObserver)
+            self.periodicTimeObserver = nil
+        }
+        
+        if statusObserver != nil {
+            self.avPlayer.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
+            statusObserver = nil
         }
     }
     
     private func postStateMessage() {
-        DispatchQueue.main.async { [self] in
-            var message: String = ""
-            switch state {
-            case .initial:
-                message = MessageDefine.RADIOPLAYER_INITIAL
-            case .playing:
-                message = MessageDefine.RADIOPLAYER_PLAYING
-            case .pause:
-                message = MessageDefine.RADIOPLAYER_PAUSE
-            case .stop:
-                message = MessageDefine.RADIOPLAYER_STOP
-            case .buffering:
-                message = MessageDefine.RADIOPLAYER_BUFFERING
-            }
-            NotificationCenter.default.post(name: Notification.Name(message), object: nil)
+        var message: String = ""
+        switch state {
+        case .playing:
+            message = MessageDefine.RADIOPLAYER_PLAYING
+        case .pause:
+            message = MessageDefine.RADIOPLAYER_PAUSE
+        case .stop:
+            message = MessageDefine.RADIOPLAYER_STOP
+        case .buffering:
+            message = MessageDefine.RADIOPLAYER_BUFFERING
+        case .none:
+            break
         }
+        NotificationCenter.default.post(name: Notification.Name(message), object: nil)
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         let newStatus = avPlayer.currentItem?.status
         
-        if newStatus == .failed {
+        if newStatus == .readyToPlay {
+            print("readyToPlay")
+            self.state = .playing
+        } else if newStatus == .failed {
             NSLog("Error: \(String(describing: self.avPlayer.currentItem?.error?.localizedDescription)), error: \(String(describing: self.avPlayer.currentItem?.error))")
+            stop()
         }
     }
 
-    @objc func failedToPlayToEndTime(_ notification: Notification) {
+    @objc private func failedToPlayToEndTime(_ notification: Notification) {
         let error = notification.userInfo!["AVPlayerItemFailedToPlayToEndTimeErrorKey"]
         print("failedToPlayToEndTime Error: \(String(describing: error))")
         interrupt()
+    }
+    
+    @objc private func playbackStalled(_ notification: Notification) {
+        
+    }
+    
+    @objc private func stationPlayOrPause() {
+        if state == .playing {
+            pause()
+        } else if state == .pause ||  state == .stop {
+            play()
+        }
+    }
+    
+    @objc private func stationPlay(_ notification: Notification) {
+        if let radioStationModel:RadioStationModel = notification.object as? RadioStationModel {
+            stop()
+            play(name: radioStationModel.radioStation.name, streamUrl: radioStationModel.radioStation.urlResolved, showImage: radioStationModel.radioImage)
+        }
     }
 }
 
@@ -222,7 +243,7 @@ extension RadioPlayer {
         
         let playerItem = avPlayer.currentItem
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem?.currentTime().seconds
-       // nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem?.asset.duration.seconds
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem?.duration.seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = avPlayer.rate
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo

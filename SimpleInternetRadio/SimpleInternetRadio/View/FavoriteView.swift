@@ -9,8 +9,6 @@ import SwiftUI
 
 struct FavoriteView: View {
     @State private var searchText = ""
-    @State var topVotes: [RadioStation] = []
-    @State var searchRadios: [RadioStation] = []
     @StateObject var crrentRadioProgress = ModelManager.shared.crrentRadioProgress
     @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     

@@ -10,7 +10,6 @@ import SwiftUI
 struct MiniPlayerView: View {
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var crrentRadioProgress: RadioProgress = ModelManager.shared.crrentRadioProgress
-    @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     @State var viewHieght:CGFloat = 80
     @State var showSheet:Bool = false
         
@@ -18,7 +17,7 @@ struct MiniPlayerView: View {
         GeometryReader { geometry in
             ZStack {
                 HStack (alignment: .center,spacing: 20){
-                    Image(favoriteName)
+                    Image(PlayerViewControl.favoriteName)
                         .resizable()
                         .frame(width: 30, height: 30)
                         .colorMultiply(colorScheme == .light ? .white : .black)
@@ -26,18 +25,17 @@ struct MiniPlayerView: View {
                             PlayerViewControl.favoriteClick()
                         }.padding(10)
                     Spacer()
-                    Image(buttonName)
+                    Image(PlayerViewControl.playName)
                         .resizable()
                         .frame(width:buttonFrame, height: buttonFrame)
                         .colorMultiply(colorScheme == .light ? .white : .black)
                         .onTapGesture {
-                            PlayerViewControl.playClick()
+                            PlayerViewControl.playOrPauseClick()
                         }.overlay {
                             BufferingView(isReverseColor: false)
-                                .isHidden(!crrentRadioProgress.isBuffering)
-                                .disabled(!crrentRadioProgress.isBuffering)
+                                .isHidden(crrentRadioProgress.state != .buffering)
                             
-                        }.padding(10)
+                        }.padding(buttonPadding)
                 }
                 
                 
@@ -79,26 +77,12 @@ struct MiniPlayerView: View {
         }
     }
     
-    var buttonName:String {
-        if (crrentRadioProgress.radioStationModel == nil && !crrentRadioProgress.isBuffering && !crrentRadioProgress.isPlaying) || crrentRadioProgress.isBuffering {
-            return "but-play"
-        } else {
-            return crrentRadioProgress.isPlaying ? "never-used" : "never-used-2"
-        }
-    }
-    
     var buttonFrame: CGFloat {
-        return crrentRadioProgress.radioStationModel == nil || crrentRadioProgress.isBuffering ? 30 : 50
+        return crrentRadioProgress.state == .playing  || crrentRadioProgress.state == .pause ? 50 : 30
     }
     
-    var favoriteName: String {
-        let stationuuid = crrentRadioProgress.radioStationModel?.radioStation.stationuuid
-        
-        guard let uuid = stationuuid else {
-            return "btn-favorite"
-        }
-        
-        return radioStationsModel.isFavorite(uuid) ? "btn-favoriteFill" : "btn-favorite"
+    var buttonPadding: CGFloat {
+        return crrentRadioProgress.state == .playing  || crrentRadioProgress.state == .pause ? 5 : 15
     }
 }
 

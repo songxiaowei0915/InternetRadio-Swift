@@ -31,6 +31,11 @@ class ModelManager {
                                                 Notification.Name(MessageDefine.RADIOPLAYER_PLAYING), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(radioBuffering), name:
                                                 Notification.Name(MessageDefine.RADIOPLAYER_BUFFERING), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stationPlay), name:
+                                                Notification.Name(MessageDefine.STATION_PLAY), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stationFavorite), name:
+                                                Notification.Name(MessageDefine.STATION_FAVORITE), object: nil)
+        
     }
     
     func removeObserver() {
@@ -38,21 +43,36 @@ class ModelManager {
     }
     
     @objc private func radioPause() {
-        crrentRadioProgress.isPlaying = false
-        crrentRadioProgress.isBuffering = false
+        crrentRadioProgress.state = .pause
     }
     
     @objc private func radioStop() {
-        crrentRadioProgress.isPlaying = false
-        crrentRadioProgress.isBuffering = false
-        crrentRadioProgress.radioStationModel = nil
+        crrentRadioProgress.state = .stop
     }
     
     @objc private func radioPlaying() {
-        crrentRadioProgress.isPlaying = true
+        crrentRadioProgress.state = .playing
+        radioStationsModel.addHistroyStation((crrentRadioProgress.radioStationModel?.radioStation.stationuuid)!)
     }
     
     @objc private func radioBuffering() {
-        crrentRadioProgress.isBuffering = true
+        crrentRadioProgress.state = .buffering
+    }
+    
+    @objc private func stationPlay(_ notification: NSNotification) {
+        let radioStationModel:RadioStationModel = notification.object as! RadioStationModel
+        if crrentRadioProgress.radioStationModel != radioStationModel {
+            crrentRadioProgress.isPlaying = false
+            crrentRadioProgress.radioStationModel = radioStationModel
+        }
+    }
+    
+    @objc private func stationFavorite(_ notification: NSNotification) {
+        let stationuuid:String = notification.object as! String
+        if radioStationsModel.isFavorite(stationuuid) {
+            radioStationsModel.removeFavoriteStation(uuid: stationuuid)
+        } else {
+            radioStationsModel.addFavoriteStation(stationuuid)
+        }
     }
 }

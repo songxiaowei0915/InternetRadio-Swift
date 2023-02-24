@@ -15,12 +15,17 @@ class RadioStationsModel : ObservableObject {
         didSet {
             getMainStations()
             getFavoriteStations()
+            getHistroyStations()
         }
     }
     @Published var mainStations: [RadioStationModel] = []
-    @Published var searchStations: [RadioStationModel] = []
+    @Published var searchMainStations: [RadioStationModel] = []
+    
     @Published var favoriteStations: [RadioStationModel] = []
     @Published var searchFavoriteStations: [RadioStationModel] = []
+    
+    @Published var histroyStations: [RadioStationModel] = []
+    @Published var searchHistroyStations: [RadioStationModel] = []
         
     func getMainStations() {
         let identifier = Locale.current.region!.identifier
@@ -28,14 +33,20 @@ class RadioStationsModel : ObservableObject {
         mainStations = getLimitArray(tempes)
     }
     
-    func getSearchStations(searchText: String) {
+    func searchStationsForRangs(searchText: String, rangs:[RadioStationModel], completion: @escaping ([RadioStationModel]) -> Void ) {
         let searchText = searchText.trimmingCharacters(in: .whitespaces)
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else {return}
-            let tempes = self.stations.filter({ $0.radioStation.name.contains(searchText) || $0.radioStation.country.contains(searchText) || $0.radioStation.language.contains(searchText) || $0.radioStation.tags.contains(searchText) || $0.radioStation.state.contains(searchText)
+        DispatchQueue.main.async {
+            let stations = rangs.filter({ $0.radioStation.name.contains(searchText) || $0.radioStation.country.contains(searchText) || $0.radioStation.language.contains(searchText) || $0.radioStation.tags.contains(searchText) || $0.radioStation.state.contains(searchText)
             }).sorted(by: { $0.radioStation.votes > $1.radioStation.votes })
             
-            self.searchStations = self.getLimitArray(tempes)
+            completion(stations)
+        }
+    }
+    
+    func getSearchStations(searchText: String) {
+        searchStationsForRangs(searchText: searchText, rangs: stations) { [weak self] values in
+            guard let self = self else {return}
+            self.searchMainStations = self.getLimitArray(values)
         }
     }
     
@@ -52,17 +63,21 @@ class RadioStationsModel : ObservableObject {
         return Array(array[0...count-1])
     }
     
-    func getFavoriteStations() {
-        let stationuuids = FavoriteManager.shared.stationuuids
+    func getStationsForUUIDRangs(uuidRangs:[String]) -> [RadioStationModel] {
+        let stationuuids = uuidRangs
         
-        var stationsTemp:[RadioStationModel] = []
+        var results: [RadioStationModel] = []
         for uuid in stationuuids {
             guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
                 continue
             }
-            stationsTemp.append(station)
+            results.append(station)
         }
-        favoriteStations = stationsTemp
+        return results
+    }
+    
+    func getFavoriteStations() {
+        favoriteStations = getStationsForUUIDRangs(uuidRangs:FavoriteManager.shared.uuids)
     }
     
     func addFavoriteStation(_ uuid: String) {
@@ -104,11 +119,9 @@ class RadioStationsModel : ObservableObject {
     }
     
     func getSearchFavoriteStations(searchText: String) {
-        let searchText = searchText.trimmingCharacters(in: .whitespaces)
-        DispatchQueue.main.async { [weak self] in
+        searchStationsForRangs(searchText: searchText, rangs: favoriteStations) { [weak self] values in
             guard let self = self else {return}
-            self.searchFavoriteStations = self.favoriteStations.filter({ $0.radioStation.name.contains(searchText) || $0.radioStation.country.contains(searchText) || $0.radioStation.language.contains(searchText) || $0.radioStation.tags.contains(searchText) || $0.radioStation.state.contains(searchText)
-            }).sorted(by: { $0.radioStation.votes > $1.radioStation.votes })
+            self.searchFavoriteStations = self.getLimitArray(values)
         }
     }
     
@@ -122,5 +135,58 @@ class RadioStationsModel : ObservableObject {
         }
         
         return true
+    }
+    
+    func getHistroyStations() {
+        histroyStations = getStationsForUUIDRangs(uuidRangs:HistroyManager.shared.uuids)
+    }
+    
+    func addHistroyStation(_ uuid: String) {
+        guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
+            return
+        }
+        
+        if let index = histroyStations.firstIndex(of: station) {
+            if index == 0 {
+                return
+            }
+            
+            histroyStations.remove(at: index)
+        }
+        
+        if histroyStations.count >= STATION_COUNT_LIMIT {
+            histroyStations.removeLast()
+        }
+        
+        histroyStations.insert(station, at: 0)
+        HistroyManager.shared.add(station.radioStation.stationuuid)
+    }
+    
+    func removeHistroyStation(uuid: String) {
+        guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
+            return
+        }
+        
+        guard let index = favoriteStations.firstIndex(of: station) else {
+            return
+        }
+        
+        histroyStations.remove(at: index)
+        HistroyManager.shared.remove(uuid)
+    }
+    
+    func removeHistroyStation(index: Int) {
+        if index < histroyStations.endIndex {
+            let uuid = histroyStations[index].radioStation.stationuuid
+            histroyStations.remove(at: index)
+            HistroyManager.shared.remove(uuid)
+        }
+    }
+    
+    func getSearchHistroyStations(searchText: String) {
+        searchStationsForRangs(searchText: searchText, rangs: histroyStations) { [weak self] values in
+            guard let self = self else {return}
+            self.searchHistroyStations = self.getLimitArray(values)
+        }
     }
 }

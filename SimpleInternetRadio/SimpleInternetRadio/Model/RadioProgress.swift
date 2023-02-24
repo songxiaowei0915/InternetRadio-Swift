@@ -14,15 +14,18 @@ class RadioProgress: ObservableObject {
     @Published var isPlaying: Bool = false {
         didSet {
             radioStationModel?.isPlaying = isPlaying
-            if isPlaying {
-                isBuffering = false
-            }
         }
     }
-    @Published var isBuffering: Bool = false {
+    
+    @Published var state: PlayerState = .none {
         didSet {
-            if isBuffering {
+            switch state {
+            case .playing:
+                isPlaying = true
+                break
+            case .none,.pause,.stop,.buffering:
                 isPlaying = false
+                break
             }
         }
     }

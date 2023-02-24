@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 class RadioStationModel: ObservableObject, Equatable, Identifiable {
     @Published var radioStation: RadioStation {
@@ -18,6 +19,7 @@ class RadioStationModel: ObservableObject, Equatable, Identifiable {
     @Published var isPlaying: Bool = false
     
     @Published var radioImage:UIImage?
+    @Published var image:Image?
     
     init(radioStation: RadioStation, isPlaying: Bool = false) {
         self.radioStation = radioStation
