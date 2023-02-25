@@ -231,8 +231,11 @@ class RadioPlayer : NSObject {
     
     @objc private func stationPlay(_ notification: Notification) {
         if let radioStationModel:RadioStationModel = notification.object as? RadioStationModel {
+            guard let radioStation = radioStationModel.radioStation  else{
+                return
+            }
             stop()
-            play(name: radioStationModel.radioStation.name, streamUrl: radioStationModel.radioStation.urlResolved, showImage: radioStationModel.radioImage)
+            play(name: radioStation.name, streamUrl: radioStation.urlResolved, showImage: radioStationModel.radioImage)
         }
     }
 }

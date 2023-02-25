@@ -11,7 +11,7 @@ struct MainView: View {
     @State private var searchText = ""
     @State var topVotes: [RadioStation] = []
     @State var searchRadios: [RadioStation] = []
-    @StateObject var crrentRadioProgress = ModelManager.shared.crrentRadioProgress
+    @StateObject var crrentRadioProgress:RadioProgress = ModelManager.shared.crrentRadioProgress
     @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     
     var body: some View {
@@ -31,7 +31,7 @@ struct MainView: View {
             .searchable(text: $searchText, prompt:"Search")
             .onSubmit(of:.search,runSearch)
             
-            MiniPlayerView()
+            MiniPlayerView(crrentRadioProgress: crrentRadioProgress, radioStationModel: crrentRadioProgress.radioStationModel)
         }
     }
     

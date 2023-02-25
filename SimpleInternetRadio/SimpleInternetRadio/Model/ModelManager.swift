@@ -51,8 +51,11 @@ class ModelManager {
     }
     
     @objc private func radioPlaying() {
+        guard let radioStation = crrentRadioProgress.radioStationModel.radioStation else {
+            return
+        }
         crrentRadioProgress.state = .playing
-        radioStationsModel.addHistroyStation((crrentRadioProgress.radioStationModel?.radioStation.stationuuid)!)
+        radioStationsModel.addHistroyStation(radioStation.stationuuid)
     }
     
     @objc private func radioBuffering() {
@@ -61,18 +64,23 @@ class ModelManager {
     
     @objc private func stationPlay(_ notification: NSNotification) {
         let radioStationModel:RadioStationModel = notification.object as! RadioStationModel
-        if crrentRadioProgress.radioStationModel != radioStationModel {
-            crrentRadioProgress.isPlaying = false
-            crrentRadioProgress.radioStationModel = radioStationModel
+        if crrentRadioProgress.radioStationModel.radioStation != radioStationModel.radioStation {
+            crrentRadioProgress.radioStationModel.reset(radioStation: radioStationModel.radioStation, isPlaying: radioStationModel.isPlaying, radioImage: radioStationModel.radioImage)
         }
     }
     
     @objc private func stationFavorite(_ notification: NSNotification) {
-        let stationuuid:String = notification.object as! String
-        if radioStationsModel.isFavorite(stationuuid) {
-            radioStationsModel.removeFavoriteStation(uuid: stationuuid)
+        let radioStationModel = notification.object as! RadioStationModel
+        guard let radioStation = radioStationModel.radioStation else {
+            return
+        }
+        
+        radioStationModel.isFavorite = !radioStationModel.isFavorite
+        
+        if radioStationModel.isFavorite {
+            radioStationsModel.addFavoriteStation(radioStation.stationuuid)
         } else {
-            radioStationsModel.addFavoriteStation(stationuuid)
+            radioStationsModel.removeFavoriteStation(uuid: radioStation.stationuuid)
         }
     }
 }

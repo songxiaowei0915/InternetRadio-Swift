@@ -10,20 +10,28 @@ import UIKit
 import SwiftUI
 
 class RadioStationModel: ObservableObject, Equatable, Identifiable {
-    @Published var radioStation: RadioStation {
+    @Published var radioStation: RadioStation? = nil {
         didSet {
             isPlaying = false
+            isFavorite = false
             radioImage = nil
         }
     }
     @Published var isPlaying: Bool = false
+    @Published var isFavorite: Bool =  false
     
-    @Published var radioImage:UIImage?
-    @Published var image:Image?
+    @Published var radioImage:UIImage? = nil
     
-    init(radioStation: RadioStation, isPlaying: Bool = false) {
+    init(radioStation: RadioStation? = nil, isPlaying: Bool = false, radioImage: UIImage? = nil) {
         self.radioStation = radioStation
         self.isPlaying = isPlaying
+        self.radioImage = radioImage
+    }
+    
+    func reset(radioStation: RadioStation?, isPlaying: Bool, radioImage: UIImage?) {
+        self.radioStation = radioStation
+        self.isPlaying = isPlaying
+        self.radioImage = radioImage
     }
 }
 

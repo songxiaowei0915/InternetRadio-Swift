@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4351395029A6183E002CC53E /* BufferingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351394F29A6183E002CC53E /* BufferingView.swift */; };
-		4351395229A6500C002CC53E /* PlayerViewControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351395129A6500C002CC53E /* PlayerViewControl.swift */; };
 		4351395429A7C397002CC53E /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4351395329A7C397002CC53E /* HistoryView.swift */; };
 		4365789D29A1DC84000558D9 /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4365789C29A1DC84000558D9 /* ModelManager.swift */; };
 		4365789F29A1EA16000558D9 /* RadioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4365789E29A1EA16000558D9 /* RadioPlayerView.swift */; };
@@ -46,7 +45,6 @@
 
 /* Begin PBXFileReference section */
 		4351394F29A6183E002CC53E /* BufferingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferingView.swift; sourceTree = "<group>"; };
-		4351395129A6500C002CC53E /* PlayerViewControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewControl.swift; sourceTree = "<group>"; };
 		4351395329A7C397002CC53E /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		4365789C29A1DC84000558D9 /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
 		4365789E29A1EA16000558D9 /* RadioPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPlayerView.swift; sourceTree = "<group>"; };
@@ -189,7 +187,6 @@
 			children = (
 				436FB485299E36E7006E9382 /* MainView.swift */,
 				4351394F29A6183E002CC53E /* BufferingView.swift */,
-				4351395129A6500C002CC53E /* PlayerViewControl.swift */,
 				436578AE29A4A2C1000558D9 /* RadioItemView.swift */,
 				436578AC29A49FD2000558D9 /* FavoriteView.swift */,
 				4351395329A7C397002CC53E /* HistoryView.swift */,
@@ -300,7 +297,6 @@
 				436FB486299E36E7006E9382 /* MainView.swift in Sources */,
 				4365789D29A1DC84000558D9 /* ModelManager.swift in Sources */,
 				4385950B29A1CCD2006348F2 /* RadioProgress.swift in Sources */,
-				4351395229A6500C002CC53E /* PlayerViewControl.swift in Sources */,
 				436578AB29A46B3D000558D9 /* RadioStationModel.swift in Sources */,
 				4351395429A7C397002CC53E /* HistoryView.swift in Sources */,
 				43704742299E101C008F931F /* LanguageData.swift in Sources */,

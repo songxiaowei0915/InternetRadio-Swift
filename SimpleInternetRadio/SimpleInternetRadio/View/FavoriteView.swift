@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FavoriteView: View {
     @State private var searchText = ""
-    @StateObject var crrentRadioProgress = ModelManager.shared.crrentRadioProgress
+    @StateObject var crrentRadioProgress: RadioProgress = ModelManager.shared.crrentRadioProgress
     @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     
     var body: some View {
@@ -29,7 +29,7 @@ struct FavoriteView: View {
             .searchable(text: $searchText, prompt:"Search")
             .onSubmit(of:.search,runSearch)
             
-            MiniPlayerView()
+            MiniPlayerView(crrentRadioProgress: crrentRadioProgress, radioStationModel: crrentRadioProgress.radioStationModel)
         }
     }
     

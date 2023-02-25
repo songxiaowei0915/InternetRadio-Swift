@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4370471C299B8920008F931F"
-               BuildableName = "SimpleInternetRadio.app"
+               BuildableName = "Internet Radio.app"
                BlueprintName = "SimpleInternetRadio"
                ReferencedContainer = "container:SimpleInternetRadio.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4370471C299B8920008F931F"
-            BuildableName = "SimpleInternetRadio.app"
+            BuildableName = "Internet Radio.app"
             BlueprintName = "SimpleInternetRadio"
             ReferencedContainer = "container:SimpleInternetRadio.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4370471C299B8920008F931F"
-            BuildableName = "SimpleInternetRadio.app"
+            BuildableName = "Internet Radio.app"
             BlueprintName = "SimpleInternetRadio"
             ReferencedContainer = "container:SimpleInternetRadio.xcodeproj">
          </BuildableReference>
