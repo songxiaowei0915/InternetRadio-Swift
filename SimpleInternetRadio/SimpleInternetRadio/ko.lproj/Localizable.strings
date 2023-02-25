@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  SimpleInternetRadio
+
+  Created by 宋小伟 on 2023/2/25.
+  
+*/
+
+"Home" = "홈";
+"Favorite" = "즐겨찾기";
+"History" = "히스토리";
+"Search" = "더 검색";
+"Tip" = "팁";
+"TheNetworkConnectionWasLost" = "네트워크 연결이 끊어졌습니다.";
+"TryAgain" = "다시 시도";

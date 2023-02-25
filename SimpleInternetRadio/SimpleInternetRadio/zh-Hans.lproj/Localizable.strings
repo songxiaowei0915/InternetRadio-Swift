@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  SimpleInternetRadio
+
+  Created by 宋小伟 on 2023/2/25.
+  
+*/
+
+"Home" = "主页";
+"Favorite" = "喜欢";
+"History" = "历史";
+"Search" = "搜索更多";
+"Tip" = "提示";
+"TheNetworkConnectionWasLost" = "网络连接丢失。";
+"TryAgain" = "重试";

@@ -28,7 +28,7 @@ struct MainView: View {
             .overlay {
                 ProgressView().isHidden(radioStationsModel.mainStations.count > 0)
             }
-            .searchable(text: $searchText)
+            .searchable(text: $searchText, prompt:"Search")
             .onSubmit(of:.search,runSearch)
             
             MiniPlayerView()

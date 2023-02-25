@@ -11,7 +11,7 @@ import SwiftUI
 struct SimpleInternetRadioApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().environment(\.locale, .init(identifier: Locale.current.identifier))
         }
     }
 }

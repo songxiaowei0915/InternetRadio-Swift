@@ -114,12 +114,20 @@ class RadioPlayer : NSObject {
     }
     
     func interrupt() {
+        if avPlayer.currentItem == nil {
+            return
+        }
+        
         interruptStatus = state
         avPlayer.pause()
         state = .buffering
     }
     
     func resume() {
+        if avPlayer.currentItem == nil {
+            return
+        }
+        
         switch interruptStatus {
         case .buffering, .playing:
             play()

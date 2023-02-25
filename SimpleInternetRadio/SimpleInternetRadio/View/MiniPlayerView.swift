@@ -44,12 +44,12 @@ struct MiniPlayerView: View {
                     RadioPlayAnimView(isReverseColor: false, frameWidth: 30, frameHeight: 30, isPlaying: $crrentRadioProgress.isPlaying)
                     
                     VStack(alignment: .leading) {
-                        Text( crrentRadioProgress.radioStationModel?.radioStation.name ?? "Nothing to play")
+                        Text( crrentRadioProgress.radioStationModel?.radioStation.name ?? "")
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(colorScheme == .light ? .white : .black)
                             .lineLimit(2)
-                        Text(crrentRadioProgress.radioStationModel?.radioStation.tags ?? "Nothing" )
+                        Text(crrentRadioProgress.radioStationModel?.radioStation.tags ?? "" )
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .fixedSize(horizontal: false, vertical: true)

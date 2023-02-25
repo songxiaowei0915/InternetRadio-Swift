@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  SimpleInternetRadio
+
+  Created by 宋小伟 on 2023/2/25.
+  
+*/
+
+"Home" = "บ้าน";
+"Favorite" = "รายการโปรด";
+"History" = "ประวัติ";
+"Search" = "ค้นหาเพิ่มเติม";
+"Tip" = "ทิป";
+"TheNetworkConnectionWasLost" = "การเชื่อมต่อเครือข่ายขาดหาย";
+"TryAgain" = "ลองอีกครั้ง";

@@ -49,7 +49,7 @@ struct RadioPlayerView: View {
                 }
                 
             VStack(alignment: .center,spacing: 5) {
-                Text( crrentRadioProgress.radioStationModel?.radioStation.name ?? "Nothing to play")
+                Text( crrentRadioProgress.radioStationModel?.radioStation.name ?? "")
                     .font(.headline)
                     .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(3)

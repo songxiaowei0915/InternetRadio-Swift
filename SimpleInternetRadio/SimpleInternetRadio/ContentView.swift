@@ -38,9 +38,9 @@ struct ContentView: View {
         }
         .alert(isPresented: $presentAlert) {
             Alert(
-                title: Text("The network connection was lost."),
+                title: Text("TheNetworkConnectionWasLost"),
                 dismissButton: .default(
-                    Text("Try Again")
+                    Text("TryAgain")
                 ))
         }
         .onAppear {
