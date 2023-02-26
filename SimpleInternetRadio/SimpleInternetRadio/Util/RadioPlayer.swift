@@ -39,9 +39,11 @@ class RadioPlayer : NSObject {
     
     private override init() {
         let audioSession = AVAudioSession.sharedInstance()
-        try? audioSession.setCategory(AVAudioSession.Category.playback, options: [.defaultToSpeaker])
-        try? audioSession.setMode(AVAudioSession.Mode.default)
-        try? audioSession.setActive(true)
+//        try? audioSession.setCategory(AVAudioSession.Category.playback, options: [.defaultToSpeaker])
+//        try? audioSession.setMode(AVAudioSession.Mode.default)
+//        try? audioSession.setActive(true)
+        try? audioSession.setCategory(AVAudioSession.Category.playAndRecord, mode: .spokenAudio, options: .defaultToSpeaker)
+        try? audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
         avPlayer = AVPlayer()
         avPlayer.allowsExternalPlayback = false

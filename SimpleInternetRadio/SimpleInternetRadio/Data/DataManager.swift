@@ -45,6 +45,7 @@ class DataManager {
         }
         
         getStationList { stations in
+            print(Date.now)
             self.stations = stations
             if let encoded = try? JSONEncoder().encode(self.stations) {
                 UserDefaults.standard.set(encoded, forKey: self.saveKey)

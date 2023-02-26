@@ -10,6 +10,16 @@ import UIKit
 
 let STATION_COUNT_LIMIT = 10000
 
+struct SmartSearchMatcher {
+    private(set) var searchTokens: [String.SubSequence]
+    
+    init(searchString: String) {
+        searchTokens = searchString.split(whereSeparator: {$0.isWhitespace}).sorted {$0.count > $1.count}
+    }
+    
+    
+}
+
 class RadioStationsModel : ObservableObject {
     @Published var stations:[RadioStationModel] = [] {
         didSet {
@@ -36,7 +46,13 @@ class RadioStationsModel : ObservableObject {
     func searchStationsForRangs(searchText: String, rangs:[RadioStationModel], completion: @escaping ([RadioStationModel]) -> Void ) {
         let searchText = searchText.trimmingCharacters(in: .whitespaces)
         DispatchQueue.main.async {
-            let stations = rangs.filter({ $0.radioStation.name.contains(searchText) || $0.radioStation.country.contains(searchText) || $0.radioStation.language.contains(searchText) || $0.radioStation.tags.contains(searchText) || $0.radioStation.state.contains(searchText)
+            let stations = rangs.filter({
+                $0.radioStation.name.contains(searchText) ||
+                $0.radioStation.country.contains(searchText) ||
+                $0.radioStation.language.contains(searchText) ||
+                $0.radioStation.tags.contains(searchText) ||
+                $0.radioStation.state.contains(searchText) ||
+                $0.radioStation.name.localizedCaseInsensitiveContains(searchText) || $0.radioStation.country.localizedCaseInsensitiveContains(searchText) || $0.radioStation.language.localizedCaseInsensitiveContains(searchText) || $0.radioStation.tags.localizedCaseInsensitiveContains(searchText) || $0.radioStation.state.localizedCaseInsensitiveContains(searchText)
             }).sorted(by: { $0.radioStation.votes > $1.radioStation.votes })
             
             completion(stations)
