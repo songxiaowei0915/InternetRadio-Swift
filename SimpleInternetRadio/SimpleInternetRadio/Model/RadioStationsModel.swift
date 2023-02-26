@@ -10,16 +10,6 @@ import UIKit
 
 let STATION_COUNT_LIMIT = 10000
 
-struct SmartSearchMatcher {
-    private(set) var searchTokens: [String.SubSequence]
-    
-    init(searchString: String) {
-        searchTokens = searchString.split(whereSeparator: {$0.isWhitespace}).sorted {$0.count > $1.count}
-    }
-    
-    
-}
-
 class RadioStationsModel : ObservableObject {
     @Published var stations:[RadioStationModel] = [] {
         didSet {
