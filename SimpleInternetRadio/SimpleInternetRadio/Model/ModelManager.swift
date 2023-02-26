@@ -51,7 +51,7 @@ class ModelManager {
     }
     
     @objc private func radioPlaying() {
-        guard let radioStation = crrentRadioProgress.radioStationModel.radioStation else {
+        guard let radioStation = crrentRadioProgress.radioStationModel?.radioStation else {
             return
         }
         crrentRadioProgress.state = .playing
@@ -64,23 +64,26 @@ class ModelManager {
     
     @objc private func stationPlay(_ notification: NSNotification) {
         let radioStationModel:RadioStationModel = notification.object as! RadioStationModel
-        if crrentRadioProgress.radioStationModel.radioStation != radioStationModel.radioStation {
-            crrentRadioProgress.radioStationModel.reset(radioStation: radioStationModel.radioStation, isPlaying: radioStationModel.isPlaying, radioImage: radioStationModel.radioImage)
+        if crrentRadioProgress.radioStationModel != radioStationModel {
+            crrentRadioProgress.radioStationModel?.isPlaying = false
+            crrentRadioProgress.radioStationModel = radioStationModel
         }
     }
     
     @objc private func stationFavorite(_ notification: NSNotification) {
-        let radioStationModel = notification.object as! RadioStationModel
-        guard let radioStation = radioStationModel.radioStation else {
+        guard let radioStationModel = notification.object as? RadioStationModel else {
             return
         }
         
         radioStationModel.isFavorite = !radioStationModel.isFavorite
+        if crrentRadioProgress.radioStationModel == radioStationModel {
+            crrentRadioProgress.isFavorite = radioStationModel.isFavorite
+        }
         
-        if radioStationModel.isFavorite {
-            radioStationsModel.addFavoriteStation(radioStation.stationuuid)
+        if radioStationModel.isFavorite  {
+            radioStationsModel.addFavoriteStation(uuid: radioStationModel.radioStation.stationuuid)
         } else {
-            radioStationsModel.removeFavoriteStation(uuid: radioStation.stationuuid)
+            radioStationsModel.removeFavoriteStation(uuid: radioStationModel.radioStation.stationuuid )
         }
     }
 }

@@ -29,15 +29,15 @@ class RadioStationsModel : ObservableObject {
         
     func getMainStations() {
         let identifier = Locale.current.region!.identifier
-        let tempes = stations.filter({$0.radioStation!.countrycode == identifier}).sorted(by: { $0.radioStation!.votes > $1.radioStation!.votes })
+        let tempes = stations.filter({$0.radioStation.countrycode == identifier}).sorted(by: { $0.radioStation.votes > $1.radioStation.votes })
         mainStations = getLimitArray(tempes)
     }
     
     func searchStationsForRangs(searchText: String, rangs:[RadioStationModel], completion: @escaping ([RadioStationModel]) -> Void ) {
         let searchText = searchText.trimmingCharacters(in: .whitespaces)
         DispatchQueue.main.async {
-            let stations = rangs.filter({ $0.radioStation!.name.contains(searchText) || $0.radioStation!.country.contains(searchText) || $0.radioStation!.language.contains(searchText) || $0.radioStation!.tags.contains(searchText) || $0.radioStation!.state.contains(searchText)
-            }).sorted(by: { $0.radioStation!.votes > $1.radioStation!.votes })
+            let stations = rangs.filter({ $0.radioStation.name.contains(searchText) || $0.radioStation.country.contains(searchText) || $0.radioStation.language.contains(searchText) || $0.radioStation.tags.contains(searchText) || $0.radioStation.state.contains(searchText)
+            }).sorted(by: { $0.radioStation.votes > $1.radioStation.votes })
             
             completion(stations)
         }
@@ -68,7 +68,7 @@ class RadioStationsModel : ObservableObject {
         
         var results: [RadioStationModel] = []
         for uuid in stationuuids {
-            guard let station = stations.filter({$0.radioStation!.stationuuid == uuid}).first else {
+            guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
                 continue
             }
             results.append(station)
@@ -83,8 +83,8 @@ class RadioStationsModel : ObservableObject {
         }
     }
     
-    func addFavoriteStation(_ uuid: String) {
-        guard let station = stations.filter({$0.radioStation!.stationuuid == uuid}).first else {
+    func addFavoriteStation(uuid: String) {
+        guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
             return
         }
         
@@ -96,12 +96,13 @@ class RadioStationsModel : ObservableObject {
             favoriteStations.removeLast()
         }
         
+        station.isFavorite = true
         favoriteStations.insert(station, at: 0)
-        FavoriteManager.shared.add(station.radioStation!.stationuuid)
+        FavoriteManager.shared.add(station.radioStation.stationuuid)
     }
     
     func removeFavoriteStation(uuid: String) {
-        guard let station = stations.filter({$0.radioStation!.stationuuid == uuid}).first else {
+        guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
             return
         }
         
@@ -109,13 +110,15 @@ class RadioStationsModel : ObservableObject {
             return
         }
         
+        favoriteStations[index].isFavorite = false
         favoriteStations.remove(at: index)
         FavoriteManager.shared.remove(uuid)
     }
     
     func removeFavoriteStation(index: Int) {
         if index < favoriteStations.endIndex {
-            let uuid = favoriteStations[index].radioStation!.stationuuid
+            let uuid = favoriteStations[index].radioStation.stationuuid
+            favoriteStations[index].isFavorite = false
             favoriteStations.remove(at: index)
             FavoriteManager.shared.remove(uuid)
         }
@@ -129,7 +132,7 @@ class RadioStationsModel : ObservableObject {
     }
     
     func isFavorite(_ uuid: String) ->Bool {
-        guard let station = stations.filter({$0.radioStation!.stationuuid == uuid}).first else {
+        guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
             return false
         }
         
@@ -145,7 +148,7 @@ class RadioStationsModel : ObservableObject {
     }
     
     func addHistroyStation(_ uuid: String) {
-        guard let station = stations.filter({$0.radioStation!.stationuuid == uuid}).first else {
+        guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
             return
         }
         
@@ -155,6 +158,7 @@ class RadioStationsModel : ObservableObject {
             }
             
             histroyStations.remove(at: index)
+            
         }
         
         if histroyStations.count >= STATION_COUNT_LIMIT {
@@ -162,11 +166,11 @@ class RadioStationsModel : ObservableObject {
         }
         
         histroyStations.insert(station, at: 0)
-        HistroyManager.shared.add(station.radioStation!.stationuuid)
+        HistroyManager.shared.add(station.radioStation.stationuuid)
     }
     
     func removeHistroyStation(uuid: String) {
-        guard let station = stations.filter({$0.radioStation!.stationuuid == uuid}).first else {
+        guard let station = stations.filter({$0.radioStation.stationuuid == uuid}).first else {
             return
         }
         
@@ -180,7 +184,7 @@ class RadioStationsModel : ObservableObject {
     
     func removeHistroyStation(index: Int) {
         if index < histroyStations.endIndex {
-            let uuid = histroyStations[index].radioStation!.stationuuid
+            let uuid = histroyStations[index].radioStation.stationuuid
             histroyStations.remove(at: index)
             HistroyManager.shared.remove(uuid)
         }

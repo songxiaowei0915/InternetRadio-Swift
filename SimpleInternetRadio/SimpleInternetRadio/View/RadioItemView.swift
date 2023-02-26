@@ -29,13 +29,13 @@ struct RadioItemView: View {
                     
                     VStack(alignment: .leading) {
                         Spacer()
-                        Text(radioStationModel.radioStation!.name)
+                        Text(radioStationModel.radioStation.name)
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                             .lineLimit(3)
                         HStack(alignment: .center)  {
                             RadioPlayAnimView(isPlaying: $radioStationModel.isPlaying)
-                            Text("\(radioStationModel.radioStation!.tags)")
+                            Text("\(radioStationModel.radioStation.tags)")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -69,7 +69,7 @@ struct RadioItemView: View {
     }
     
     var imageURL: String  {
-        return radioStationModel.radioStation!.favicon
+        return radioStationModel.radioStation.favicon
     }
     
     var favoriteName: String {
@@ -94,7 +94,7 @@ struct RadioItemView: View {
             return
         }
         
-        let favicon = radioStationModel.radioStation!.favicon
+        let favicon = radioStationModel.radioStation.favicon
         if favicon != "" {
             DataManager.shared.fetchImage(url: favicon) { [self] image in
                 guard let image = image else { return }

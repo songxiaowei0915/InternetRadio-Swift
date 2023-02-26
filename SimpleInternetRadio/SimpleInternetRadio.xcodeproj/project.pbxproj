@@ -123,12 +123,12 @@
 			isa = PBXGroup;
 			children = (
 				4370472E299B8A2D008F931F /* Info.plist */,
+				43CDFB3A29AA8C9C002C3119 /* Resource */,
 				43704746299E110C008F931F /* Util */,
 				43704720299B8920008F931F /* SimpleInternetRadioApp.swift */,
 				43704744299E109F008F931F /* Net */,
 				43704743299E107B008F931F /* Data */,
 				43704722299B8920008F931F /* ContentView.swift */,
-				43CDFB2B29A9FA9A002C3119 /* Localizable.strings */,
 				4385950929A1CC9F006348F2 /* Model */,
 				4385950629A1059B006348F2 /* View */,
 				43704724299B8921008F931F /* Assets.xcassets */,
@@ -207,6 +207,14 @@
 				4365789C29A1DC84000558D9 /* ModelManager.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		43CDFB3A29AA8C9C002C3119 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				43CDFB2B29A9FA9A002C3119 /* Localizable.strings */,
+			);
+			path = Resource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

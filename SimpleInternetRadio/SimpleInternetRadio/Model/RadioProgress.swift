@@ -9,14 +9,31 @@ import Foundation
 
 
 class RadioProgress: ObservableObject {
-    @Published var radioStationModel:RadioStationModel = RadioStationModel()
+    @Published var radioStationModel:RadioStationModel? {
+        didSet {
+            isPlaying = radioStationModel?.isPlaying ?? false
+            isFavorite = radioStationModel?.isFavorite ?? false
+        }
+    }
+    
+    @Published var isPlaying: Bool = false {
+        didSet {
+            radioStationModel?.isPlaying = isPlaying
+        }
+    }
+    @Published var isFavorite: Bool =  false {
+        didSet {
+            radioStationModel?.isFavorite = isFavorite
+        }
+    }
+    
     @Published var state: PlayerState = .none {
         didSet {
             switch state {
             case .playing:
-                radioStationModel.isPlaying = true
+                isPlaying = true
             default:
-                radioStationModel.isPlaying = false
+                isPlaying = false
             }
         }
     }

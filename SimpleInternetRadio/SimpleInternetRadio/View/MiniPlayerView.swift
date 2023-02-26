@@ -10,9 +10,8 @@ import SwiftUI
 struct MiniPlayerView: View {
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var crrentRadioProgress: RadioProgress
-    @ObservedObject var radioStationModel: RadioStationModel
-    @State var viewHieght:CGFloat = 80
-    @State var showSheet:Bool = false
+    @State var viewHieght: CGFloat = 80
+    @State var showSheet: Bool = false
         
     var body: some View {
         GeometryReader { geometry in
@@ -21,13 +20,15 @@ struct MiniPlayerView: View {
                     Button {
                         favoriteClick()
                     } label: {
-                        Image(radioStationModel.isFavorite ? "btn-favoriteFill" : "btn-favorite")
+                        Image(crrentRadioProgress.isFavorite ? "btn-favoriteFill" : "btn-favorite")
                             .resizable()
                             .frame(width: 30, height: 30)
                             .colorMultiply(colorScheme == .light ? .white : .black)
                             .padding(10)
                     }
+                    
                     Spacer()
+                    
                     Image(playName)
                         .resizable()
                         .frame(width:buttonFrame, height: buttonFrame)
@@ -44,15 +45,15 @@ struct MiniPlayerView: View {
                 
                 HStack {
                     Spacer(minLength: 60)
-                    RadioPlayAnimView(isReverseColor: false, frameWidth: 30, frameHeight: 30, isPlaying: $radioStationModel.isPlaying)
+                    RadioPlayAnimView(isReverseColor: false, frameWidth: 30, frameHeight: 30, isPlaying: $crrentRadioProgress.isPlaying)
                     
                     VStack(alignment: .leading) {
-                        Text( radioStationModel.radioStation?.name ?? "")
+                        Text( crrentRadioProgress.radioStationModel?.radioStation.name ?? "")
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                             .foregroundColor(colorScheme == .light ? .white : .black)
                             .lineLimit(2)
-                        Text(radioStationModel.radioStation?.tags ?? "" )
+                        Text(crrentRadioProgress.radioStationModel?.radioStation.tags ?? "" )
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .fixedSize(horizontal: false, vertical: true)
@@ -76,7 +77,7 @@ struct MiniPlayerView: View {
         .frame(height: viewHieght)
         .background(colorScheme == .light ? .black : .white)
         .sheet(isPresented: $showSheet) {
-            RadioPlayerView(crrentRadioProgress: crrentRadioProgress, radioStationModel: crrentRadioProgress.radioStationModel)
+            RadioPlayerView(crrentRadioProgress: crrentRadioProgress)
         }
     }
     
@@ -103,16 +104,12 @@ struct MiniPlayerView: View {
     }
     
     func favoriteClick() {
-        guard let _ = radioStationModel.radioStation else {
-            return
-        }
-        
-        NotificationCenter.default.post(name: Notification.Name(MessageDefine.STATION_FAVORITE), object: radioStationModel)
+        NotificationCenter.default.post(name: Notification.Name(MessageDefine.STATION_FAVORITE), object: crrentRadioProgress.radioStationModel)
     }
 }
 
 struct MiniPlayerView_Previews: PreviewProvider {
     static var previews: some View {
-        MiniPlayerView(crrentRadioProgress: RadioProgress(), radioStationModel: RadioStationModel())
+        MiniPlayerView(crrentRadioProgress: RadioProgress())
     }
 }

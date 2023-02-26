@@ -31,7 +31,7 @@ struct MainView: View {
             .searchable(text: $searchText, prompt:"Search")
             .onSubmit(of:.search,runSearch)
             
-            MiniPlayerView(crrentRadioProgress: crrentRadioProgress, radioStationModel: crrentRadioProgress.radioStationModel)
+            MiniPlayerView(crrentRadioProgress: crrentRadioProgress)
         }
     }
     
