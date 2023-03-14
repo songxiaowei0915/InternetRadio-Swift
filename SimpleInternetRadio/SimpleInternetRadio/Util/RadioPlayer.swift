@@ -16,8 +16,8 @@ enum PlayerState {
 class RadioPlayer : NSObject {
     static let shared = RadioPlayer()
     
-    var avPlayer: AVPlayer
-    var state:PlayerState {
+    var avPlayer: AVPlayer?
+    var state:PlayerState = .none {
         didSet {
             postStateMessage()
         }
@@ -25,7 +25,7 @@ class RadioPlayer : NSObject {
     
     var volume : Float = 0.5 {
         didSet {
-            avPlayer.volume = volume
+            avPlayer?.volume = volume
         }
     }
     
@@ -38,6 +38,7 @@ class RadioPlayer : NSObject {
     private var interruptStatus:PlayerState? = nil
     
     private override init() {
+        super.init()
         let audioSession = AVAudioSession.sharedInstance()
 //        try? audioSession.setCategory(AVAudioSession.Category.playback, options: [.defaultToSpeaker])
 //        try? audioSession.setMode(AVAudioSession.Mode.default)
@@ -45,16 +46,16 @@ class RadioPlayer : NSObject {
         try? audioSession.setCategory(AVAudioSession.Category.playAndRecord, mode: .spokenAudio, options: .defaultToSpeaker)
         try? audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
-        avPlayer = AVPlayer()
-        avPlayer.allowsExternalPlayback = false
-        avPlayer.automaticallyWaitsToMinimizeStalling = true
-        state = .none
-        super.init()
+//        avPlayer = AVPlayer()
+//        avPlayer?.allowsExternalPlayback = false
+//        avPlayer?.automaticallyWaitsToMinimizeStalling = true
+        
+//
+//        let center = NotificationCenter.default
+//        center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: avPlayer?.currentItem)
+//        center.addObserver(self, selector:#selector(playbackStalled), name: .AVPlayerItemPlaybackStalled, object: avPlayer?.currentItem)
 
         let center = NotificationCenter.default
-        center.addObserver(self, selector:#selector(failedToPlayToEndTime), name: .AVPlayerItemFailedToPlayToEndTime, object: avPlayer.currentItem)
-        center.addObserver(self, selector:#selector(playbackStalled), name: .AVPlayerItemPlaybackStalled, object: avPlayer.currentItem)
-
         center.addObserver(
           forName: AVAudioSession.interruptionNotification,
           object: nil,
@@ -76,14 +77,16 @@ class RadioPlayer : NSObject {
         
         self.removeObserver()
         let avPlayerItem = AVPlayerItem.init(url: url)
-        if avPlayer.currentItem == nil {
+        if avPlayer?.currentItem == nil {
             avPlayer = AVPlayer.init(playerItem: avPlayerItem)
+            avPlayer?.allowsExternalPlayback = false
+            avPlayer?.automaticallyWaitsToMinimizeStalling = true
         } else {
-            avPlayer.replaceCurrentItem(with: avPlayerItem)
+            avPlayer?.replaceCurrentItem(with: avPlayerItem)
         }
-
+        
         state = .buffering
-        avPlayer.play()
+        avPlayer?.play()
         addObserver()
         lastName = name
         lastStreamUrl = streamUrl
@@ -95,9 +98,9 @@ class RadioPlayer : NSObject {
     }
     
     func stop() {
-        avPlayer.pause()
-        avPlayer.replaceCurrentItem(with: nil)
-        avPlayer.rate = 0
+        avPlayer?.pause()
+        avPlayer?.replaceCurrentItem(with: nil)
+        avPlayer?.rate = 0
         removeObserver()
         state = .stop
         
@@ -105,8 +108,8 @@ class RadioPlayer : NSObject {
     }
     
     func pause() {
-        if avPlayer.currentItem != nil {
-            avPlayer.pause()
+        if avPlayer?.currentItem != nil {
+            avPlayer?.pause()
             state = .pause
         }
     }
@@ -116,17 +119,17 @@ class RadioPlayer : NSObject {
     }
     
     func interrupt() {
-        if avPlayer.currentItem == nil {
+        if avPlayer?.currentItem == nil {
             return
         }
         
         interruptStatus = state
-        avPlayer.pause()
+        avPlayer?.pause()
         state = .buffering
     }
     
     func resume() {
-        if avPlayer.currentItem == nil {
+        if avPlayer?.currentItem == nil {
             return
         }
         
@@ -155,16 +158,16 @@ class RadioPlayer : NSObject {
     }
     
     private func addObserver() {
-        //        avPlayer.addObserver(self, forKeyPath: "timeControlStatus", options: .new, context: nil)
-        //        avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
-        statusObserver = avPlayer.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
+        //        avPlayer?.addObserver(self, forKeyPath: "timeControlStatus", options: .new, context: nil)
+        //        avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
+        statusObserver = avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
         
-        periodicTimeObserver = avPlayer.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 10, timescale: 10), queue: DispatchQueue.main) {[weak self] time in
+        periodicTimeObserver = avPlayer?.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 10, timescale: 10), queue: DispatchQueue.main) {[weak self] time in
             guard let self = self else { return }
             
-            let playbackLikelyToKeepUp = self.avPlayer.currentItem?.isPlaybackLikelyToKeepUp
+            let playbackLikelyToKeepUp = self.avPlayer?.currentItem?.isPlaybackLikelyToKeepUp
             if playbackLikelyToKeepUp == false{
-                print("Player.rate : \(self.avPlayer.rate)")
+                print("Player.rate : \(String(describing: self.avPlayer?.rate))")
             } else {
                 print("Buffering completed")
                 self.removeObserver()
@@ -174,12 +177,12 @@ class RadioPlayer : NSObject {
     
     private func removeObserver() {
         if let periodicTimeObserverObserver = self.periodicTimeObserver {
-            self.avPlayer.removeTimeObserver(periodicTimeObserverObserver)
+            self.avPlayer?.removeTimeObserver(periodicTimeObserverObserver)
             self.periodicTimeObserver = nil
         }
         
         if statusObserver != nil {
-            self.avPlayer.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
+            self.avPlayer?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
             statusObserver = nil
         }
     }
@@ -202,13 +205,13 @@ class RadioPlayer : NSObject {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        let newStatus = avPlayer.currentItem?.status
+        let newStatus = avPlayer?.currentItem?.status
         
         if newStatus == .readyToPlay {
             print("readyToPlay")
             self.state = .playing
         } else if newStatus == .failed {
-            NSLog("Error: \(String(describing: self.avPlayer.currentItem?.error?.localizedDescription)), error: \(String(describing: self.avPlayer.currentItem?.error))")
+            NSLog("Error: \(String(describing: self.avPlayer?.currentItem?.error?.localizedDescription)), error: \(String(describing: self.avPlayer?.currentItem?.error))")
             stop()
         }
     }
@@ -246,17 +249,17 @@ extension RadioPlayer {
         var nowPlayingInfo = [String : Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = name
         
-        if let image = showImage  {
-            nowPlayingInfo[MPMediaItemPropertyArtwork] =
-            MPMediaItemArtwork(boundsSize: CGSize(width: 80, height: 80)) { size in
+        if let image = showImage {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { size -> UIImage in
                 return image
-            }
+            })
         }
         
-        let playerItem = avPlayer.currentItem
+        
+        let playerItem = avPlayer?.currentItem
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem?.currentTime().seconds
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem?.duration.seconds
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = avPlayer.rate
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = avPlayer?.rate
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
