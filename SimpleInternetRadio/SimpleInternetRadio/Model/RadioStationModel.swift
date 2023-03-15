@@ -29,6 +29,23 @@ class RadioStationModel: ObservableObject, Equatable, Identifiable {
         self.radioImage = radioImage
         
     }
+    
+    func getImage(completion: @escaping (UIImage) -> Void) {
+        if radioImage != nil {
+            completion(radioImage!)
+            return
+        }
+        let favicon = radioStation.favicon
+        if favicon != "" {
+            DataManager.shared.fetchImage(url: favicon) { [self] image in
+                guard let image = image else { return }
+                DispatchQueue.main.async {
+                    self.radioImage = image
+                    completion(image)
+                }
+            }
+        }
+    }
 }
 
 extension RadioStationModel {

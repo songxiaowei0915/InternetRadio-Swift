@@ -11,7 +11,6 @@ struct RadioItemView: View {
     @Environment(\.colorScheme) private var colorScheme
     @StateObject var radioStationModel: RadioStationModel
     @ObservedObject var crrentRadioProgress: RadioProgress
-    @State var isCacheImage = false
     @State var isPlaying = false
     @StateObject var radioStationsModel: RadioStationsModel = ModelManager.shared.radioStationsModel
     
@@ -58,8 +57,8 @@ struct RadioItemView: View {
             }            
         }
         .onAppear {
-            if !isCacheImage {
-                cacheImage()
+            if radioStationModel.radioImage == nil {
+                radioStationModel.getImage { _ in }
             }
         }
     }
@@ -83,28 +82,4 @@ struct RadioItemView: View {
     func itemClick() {
         NotificationCenter.default.post(name: Notification.Name(MessageDefine.STATION_PLAY), object: radioStationModel)
     }
-    
-    func cacheImage() {
-        if isCacheImage {
-            return
-        }
-        
-        if radioStationModel.radioImage != nil {
-            isCacheImage = true
-            return
-        }
-        
-        let favicon = radioStationModel.radioStation.favicon
-        if favicon != "" {
-            DataManager.shared.fetchImage(url: favicon) { [self] image in
-                guard let image = image else { return }
-                DispatchQueue.main.async {
-                    radioStationModel.radioImage = image
-                }
-            }
-        }
-        
-        self.isCacheImage = true
-    }
-    
 }
