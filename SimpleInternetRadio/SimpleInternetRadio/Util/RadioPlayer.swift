@@ -30,7 +30,6 @@ class RadioPlayer : NSObject {
     }
     
     private var periodicTimeObserver:Any?
-    private var statusObserver:Any?
     
     private var lastName:String = ""
     private var lastShowImage:UIImage?
@@ -75,7 +74,8 @@ class RadioPlayer : NSObject {
             return
         }
         
-        self.removeObserver()
+        stop()
+        
         let avPlayerItem = AVPlayerItem.init(url: url)
         if avPlayer?.currentItem == nil {
             avPlayer = AVPlayer.init(playerItem: avPlayerItem)
@@ -87,7 +87,8 @@ class RadioPlayer : NSObject {
         
         state = .buffering
         avPlayer?.play()
-        addObserver()
+        addPlayerTimeObserver()
+        addPlayerStatusObserver()
         lastName = name
         lastStreamUrl = streamUrl
         lastShowImage = showImage
@@ -98,13 +99,18 @@ class RadioPlayer : NSObject {
     }
     
     func stop() {
-        avPlayer?.pause()
-        avPlayer?.replaceCurrentItem(with: nil)
-        avPlayer?.rate = 0
-        removeObserver()
-        state = .stop
-        
-        print("stopped radio")
+        if avPlayer != nil {
+            removeTimeObserver()
+            removePlayerStatusObserver()
+            
+            avPlayer?.pause()
+            avPlayer?.replaceCurrentItem(with: nil)
+            avPlayer?.rate = 0
+            avPlayer = nil
+            
+            state = .stop
+            print("stopped radio")
+        }
     }
     
     func pause() {
@@ -157,11 +163,9 @@ class RadioPlayer : NSObject {
         }
     }
     
-    private func addObserver() {
+    private func addPlayerTimeObserver() {
         //        avPlayer?.addObserver(self, forKeyPath: "timeControlStatus", options: .new, context: nil)
         //        avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.status), options: [.new, .initial], context: nil)
-        statusObserver = avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
-        
         periodicTimeObserver = avPlayer?.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 10, timescale: 10), queue: DispatchQueue.main) {[weak self] time in
             guard let self = self else { return }
             
@@ -170,21 +174,24 @@ class RadioPlayer : NSObject {
                 print("Player.rate : \(String(describing: self.avPlayer?.rate))")
             } else {
                 print("Buffering completed")
-                self.removeObserver()
+                self.removeTimeObserver()
             }
         }
     }
     
-    private func removeObserver() {
+    private func addPlayerStatusObserver() {
+        avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status), options:[.new, .initial], context: nil)
+    }
+    
+    private func removeTimeObserver() {
         if let periodicTimeObserverObserver = self.periodicTimeObserver {
             self.avPlayer?.removeTimeObserver(periodicTimeObserverObserver)
             self.periodicTimeObserver = nil
         }
-        
-        if statusObserver != nil {
-            self.avPlayer?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
-            statusObserver = nil
-        }
+    }
+    
+    private func removePlayerStatusObserver() {
+        self.avPlayer?.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem.status))
     }
     
     private func postStateMessage() {
@@ -239,7 +246,6 @@ class RadioPlayer : NSObject {
             return
         }
     
-        stop()
         play(name: radioStationModel.radioStation.name, streamUrl: radioStationModel.radioStation.urlResolved, showImage: radioStationModel.radioImage)
     }
 }
